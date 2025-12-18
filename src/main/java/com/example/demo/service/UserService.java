@@ -1,17 +1,7 @@
-package com.example.demo.service;
+package com.example.demo.repository;
 
 import com.example.demo.model.User;
-import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserService {
-
-    User createUser(User user);
-
-    User getUserById(Long id);
-
-    List<User> getAllUsers();
-
-    User updateUser(Long id, User user);
-
-    void deleteUser(Long id);
+public interface UserRepository extends JpaRepository<User, Long> {
 }
