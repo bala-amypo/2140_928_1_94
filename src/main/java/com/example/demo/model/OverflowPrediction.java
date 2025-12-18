@@ -1,9 +1,13 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class OverflowPrediction {
 
     @Id
@@ -13,11 +17,5 @@ public class OverflowPrediction {
     @ManyToOne
     private Bin bin;
 
-    @ManyToOne
-    private Zone zone;
-
-    private LocalDateTime predictedOverflowTime;
-    private LocalDateTime createdAt;
-
-    // getters and setters
+    private LocalDateTime predictedAt;
 }

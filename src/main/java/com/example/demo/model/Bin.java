@@ -1,26 +1,22 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Bin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
     private String identifier;
-
     private String locationDescription;
-    private double latitude;
-    private double longitude;
-
-    @ManyToOne
-    private Zone zone;
-
-    private double capacityLiters;
-    private boolean active = true;
-
-    // getters and setters
+    private Double latitude;
+    private Double longitude;
+    private Double capacityLiters;
+    private boolean active;
 }
