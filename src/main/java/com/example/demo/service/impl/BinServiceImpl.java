@@ -1,22 +1,20 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Bin;
-import com.example.demo.model.Zone;
 import com.example.demo.repository.BinRepository;
 import com.example.demo.repository.ZoneRepository;
 import com.example.demo.service.BinService;
-import com.example.demo.exception.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service   // 🔴 THIS ANNOTATION IS REQUIRED
+@Service
 public class BinServiceImpl implements BinService {
 
     private final BinRepository binRepository;
     private final ZoneRepository zoneRepository;
 
-    // REQUIRED constructor order
     public BinServiceImpl(BinRepository binRepository, ZoneRepository zoneRepository) {
         this.binRepository = binRepository;
         this.zoneRepository = zoneRepository;
@@ -25,7 +23,7 @@ public class BinServiceImpl implements BinService {
     @Override
     public Bin createBin(Bin bin) {
         if (bin.getCapacityLiters() <= 0) {
-            throw new IllegalArgumentException("capacity must be greater than zero");
+            throw new IllegalArgumentException("capacity must be positive");
         }
         return binRepository.save(bin);
     }
