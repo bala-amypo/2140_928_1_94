@@ -5,32 +5,34 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    // Constructor injection (REQUIRED)
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
-    public User registerUser(String fullName, String email, String password) {
-        User user = new User();
-        user.setFullName(fullName);
-        user.setEmail(email);
-        user.setPassword(password);
+    public User save(User user) {
         return userRepository.save(user);
     }
 
     @Override
-    public User getByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     @Override
-    public boolean exists(String email) {
-        return userRepository.existsByEmail(email);
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
     }
 }
