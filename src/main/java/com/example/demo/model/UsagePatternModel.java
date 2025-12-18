@@ -9,11 +9,7 @@ public class UsagePatternModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Bin bin;
-
-    private double avgDailyIncreaseWeekday;
-    private double avgDailyIncreaseWeekend;
+    private String pattern;
 
     public UsagePatternModel() {}
 
@@ -25,27 +21,11 @@ public class UsagePatternModel {
         this.id = id;
     }
 
-    public Bin getBin() {
-        return bin;
+    public String getPattern() {
+        return pattern;
     }
 
-    public void setBin(Bin bin) {
-        this.bin = bin;
-    }
-
-    public double getAvgDailyIncreaseWeekday() {
-        return avgDailyIncreaseWeekday;
-    }
-
-    public void setAvgDailyIncreaseWeekday(double avgDailyIncreaseWeekday) {
-        this.avgDailyIncreaseWeekday = avgDailyIncreaseWeekday;
-    }
-
-    public double getAvgDailyIncreaseWeekend() {
-        return avgDailyIncreaseWeekend;
-    }
-
-    public void setAvgDailyIncreaseWeekend(double avgDailyIncreaseWeekend) {
-        this.avgDailyIncreaseWeekend = avgDailyIncreaseWeekend;
+    public void setPattern(String pattern) {
+        this.pattern = pattern;
     }
 }

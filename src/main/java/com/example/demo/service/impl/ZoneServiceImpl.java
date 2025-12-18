@@ -16,24 +16,24 @@ public class ZoneServiceImpl implements ZoneService {
         this.repository = repository;
     }
 
-    public Zone createZone(Zone zone) {
+    public Zone create(Zone zone) {
         return repository.save(zone);
     }
 
-    public List<Zone> getAllZones() {
+    public List<Zone> getAll() {
         return repository.findAll();
     }
 
-    public Zone getZoneById(Long id) {
+    public Zone getById(Long id) {
         return repository.findById(id).orElse(null);
     }
 
-    public Zone updateZone(Long id, Zone zone) {
+    public Zone update(Long id, Zone zone) {
         zone.setId(id);
         return repository.save(zone);
     }
 
-    public void deleteZone(Long id) {
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 }

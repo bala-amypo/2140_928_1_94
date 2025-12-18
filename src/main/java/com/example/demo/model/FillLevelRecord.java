@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 public class FillLevelRecord {
@@ -10,11 +9,7 @@ public class FillLevelRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Bin bin;
-
-    private double fillPercentage;
-    private LocalDateTime recordedAt;
+    private int level;
 
     public FillLevelRecord() {}
 
@@ -26,27 +21,11 @@ public class FillLevelRecord {
         this.id = id;
     }
 
-    public Bin getBin() {
-        return bin;
+    public int getLevel() {
+        return level;
     }
 
-    public void setBin(Bin bin) {
-        this.bin = bin;
-    }
-
-    public double getFillPercentage() {
-        return fillPercentage;
-    }
-
-    public void setFillPercentage(double fillPercentage) {
-        this.fillPercentage = fillPercentage;
-    }
-
-    public LocalDateTime getRecordedAt() {
-        return recordedAt;
-    }
-
-    public void setRecordedAt(LocalDateTime recordedAt) {
-        this.recordedAt = recordedAt;
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

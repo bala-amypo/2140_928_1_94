@@ -11,12 +11,13 @@ public class Zone {
 
     private String name;
 
-    // REQUIRED
+    public Zone() {}
+
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id) {   // IMPORTANT: fixes your last error
         this.id = id;
     }
 

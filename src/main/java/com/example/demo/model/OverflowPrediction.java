@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 public class OverflowPrediction {
@@ -10,11 +9,7 @@ public class OverflowPrediction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Bin bin;
-
-    private LocalDateTime predictedAt;
-    private String message;
+    private String prediction;
 
     public OverflowPrediction() {}
 
@@ -26,27 +21,11 @@ public class OverflowPrediction {
         this.id = id;
     }
 
-    public Bin getBin() {
-        return bin;
+    public String getPrediction() {
+        return prediction;
     }
 
-    public void setBin(Bin bin) {
-        this.bin = bin;
-    }
-
-    public LocalDateTime getPredictedAt() {
-        return predictedAt;
-    }
-
-    public void setPredictedAt(LocalDateTime predictedAt) {
-        this.predictedAt = predictedAt;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+    public void setPrediction(String prediction) {
+        this.prediction = prediction;
     }
 }

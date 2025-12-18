@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/fill-levels")
+@RequestMapping("/fill-levels")
 public class FillLevelRecordController {
 
     private final FillLevelRecordService service;
@@ -18,26 +18,26 @@ public class FillLevelRecordController {
 
     @PostMapping
     public FillLevelRecord create(@RequestBody FillLevelRecord record) {
-        return service.createRecord(record);
+        return service.create(record);
     }
 
     @GetMapping
     public List<FillLevelRecord> getAll() {
-        return service.getAllRecords();
+        return service.getAll();
     }
 
     @GetMapping("/{id}")
     public FillLevelRecord getById(@PathVariable Long id) {
-        return service.getRecordById(id);
+        return service.getById(id);
     }
 
     @PutMapping("/{id}")
     public FillLevelRecord update(@PathVariable Long id, @RequestBody FillLevelRecord record) {
-        return service.updateRecord(id, record);
+        return service.update(id, record);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        service.deleteRecord(id);
+        service.delete(id);
     }
 }

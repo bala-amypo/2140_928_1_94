@@ -3,15 +3,13 @@ package com.example.demo.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String fullName;
-    private String email;
+    private String username;
 
     public User() {}
 
@@ -23,19 +21,11 @@ public class User {
         this.id = id;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

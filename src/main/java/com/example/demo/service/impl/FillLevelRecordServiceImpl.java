@@ -16,23 +16,24 @@ public class FillLevelRecordServiceImpl implements FillLevelRecordService {
         this.repository = repository;
     }
 
-    @Override
-    public FillLevelRecord save(FillLevelRecord record) {
+    public FillLevelRecord create(FillLevelRecord record) {
         return repository.save(record);
     }
 
-    @Override
-    public List<FillLevelRecord> findAll() {
+    public List<FillLevelRecord> getAll() {
         return repository.findAll();
     }
 
-    @Override
-    public FillLevelRecord findById(Long id) {
+    public FillLevelRecord getById(Long id) {
         return repository.findById(id).orElse(null);
     }
 
-    @Override
-    public void deleteById(Long id) {
+    public FillLevelRecord update(Long id, FillLevelRecord record) {
+        record.setId(id);
+        return repository.save(record);
+    }
+
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 }

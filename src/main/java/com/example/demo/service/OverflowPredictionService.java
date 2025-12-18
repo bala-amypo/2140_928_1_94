@@ -1,12 +1,10 @@
 package com.example.demo.service;
 
+import com.example.demo.model.User;
 import java.util.List;
-import com.example.demo.model.OverflowPrediction;
 
-public interface OverflowPredictionService {
-    OverflowPrediction create(OverflowPrediction data);
-    List<OverflowPrediction> getAll();
-    OverflowPrediction getById(Long id);
-    OverflowPrediction update(Long id, OverflowPrediction data);
+public interface UserService {
+    User save(User user);
+    List<User> findAll();
     void delete(Long id);
 }

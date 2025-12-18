@@ -10,34 +10,34 @@ import java.util.List;
 @RequestMapping("/bins")
 public class BinController {
 
-    private final BinService service;
+    private final BinService binService;
 
-    public BinController(BinService service) {
-        this.service = service;
+    public BinController(BinService binService) {
+        this.binService = binService;
     }
 
     @PostMapping
     public Bin create(@RequestBody Bin bin) {
-        return service.create(bin);
+        return binService.create(bin);
     }
 
     @GetMapping
     public List<Bin> getAll() {
-        return service.getAll();
+        return binService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Bin get(@PathVariable Long id) {
-        return service.getById(id);
+    public Bin getById(@PathVariable Long id) {
+        return binService.getById(id);
     }
 
     @PutMapping("/{id}")
     public Bin update(@PathVariable Long id, @RequestBody Bin bin) {
-        return service.update(id, bin);
+        return binService.update(id, bin);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        service.delete(id);
+        binService.delete(id);
     }
 }

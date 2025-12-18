@@ -1,38 +1,39 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.UsagePatternModel;
-import com.example.demo.repository.UsagePatternModelRepository;
-import com.example.demo.service.UsagePatternModelService;
+import com.example.demo.model.OverflowPrediction;
+import com.example.demo.repository.OverflowPredictionRepository;
+import com.example.demo.service.OverflowPredictionService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UsagePatternModelServiceImpl implements UsagePatternModelService {
+public class OverflowPredictionServiceImpl implements OverflowPredictionService {
 
-    private final UsagePatternModelRepository repository;
+    private final OverflowPredictionRepository repository;
 
-    public UsagePatternModelServiceImpl(UsagePatternModelRepository repository) {
+    public OverflowPredictionServiceImpl(OverflowPredictionRepository repository) {
         this.repository = repository;
     }
 
-    @Override
-    public UsagePatternModel save(UsagePatternModel model) {
-        return repository.save(model);
+    public OverflowPrediction create(OverflowPrediction prediction) {
+        return repository.save(prediction);
     }
 
-    @Override
-    public List<UsagePatternModel> findAll() {
+    public List<OverflowPrediction> getAll() {
         return repository.findAll();
     }
 
-    @Override
-    public UsagePatternModel findById(Long id) {
+    public OverflowPrediction getById(Long id) {
         return repository.findById(id).orElse(null);
     }
 
-    @Override
-    public void deleteById(Long id) {
+    public OverflowPrediction update(Long id, OverflowPrediction prediction) {
+        prediction.setId(id);
+        return repository.save(prediction);
+    }
+
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 }
