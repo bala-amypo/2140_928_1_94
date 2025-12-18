@@ -10,29 +10,30 @@ import java.util.List;
 @Service
 public class ZoneServiceImpl implements ZoneService {
 
-    private final ZoneRepository zoneRepository;
+    private final ZoneRepository repository;
 
-    public ZoneServiceImpl(ZoneRepository zoneRepository) {
-        this.zoneRepository = zoneRepository;
+    public ZoneServiceImpl(ZoneRepository repository) {
+        this.repository = repository;
     }
 
-    @Override
-    public Zone save(Zone zone) {
-        return zoneRepository.save(zone);
+    public Zone createZone(Zone zone) {
+        return repository.save(zone);
     }
 
-    @Override
-    public List<Zone> findAll() {
-        return zoneRepository.findAll();
+    public List<Zone> getAllZones() {
+        return repository.findAll();
     }
 
-    @Override
-    public Zone findById(Long id) {
-        return zoneRepository.findById(id).orElse(null);
+    public Zone getZoneById(Long id) {
+        return repository.findById(id).orElse(null);
     }
 
-    @Override
-    public void deleteById(Long id) {
-        zoneRepository.deleteById(id);
+    public Zone updateZone(Long id, Zone zone) {
+        zone.setId(id);
+        return repository.save(zone);
+    }
+
+    public void deleteZone(Long id) {
+        repository.deleteById(id);
     }
 }

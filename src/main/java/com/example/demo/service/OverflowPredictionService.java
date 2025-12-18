@@ -1,17 +1,12 @@
 package com.example.demo.service;
 
-import com.example.demo.model.FillLevelRecord;
 import java.util.List;
+import com.example.demo.model.OverflowPrediction;
 
-public interface FillLevelRecordService {
-
-    FillLevelRecord createRecord(FillLevelRecord record);
-
-    FillLevelRecord getRecordById(Long id);
-
-    List<FillLevelRecord> getAllRecords();
-
-    FillLevelRecord updateRecord(Long id, FillLevelRecord record);
-
-    void deleteRecord(Long id);
+public interface OverflowPredictionService {
+    OverflowPrediction create(OverflowPrediction data);
+    List<OverflowPrediction> getAll();
+    OverflowPrediction getById(Long id);
+    OverflowPrediction update(Long id, OverflowPrediction data);
+    void delete(Long id);
 }

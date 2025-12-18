@@ -9,11 +9,9 @@ public class Zone {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String zoneName;
-    private boolean active = true;
+    private String name;
 
-    public Zone() {}
-
+    // REQUIRED
     public Long getId() {
         return id;
     }
@@ -22,19 +20,11 @@ public class Zone {
         this.id = id;
     }
 
-    public String getZoneName() {
-        return zoneName;
+    public String getName() {
+        return name;
     }
 
-    public void setZoneName(String zoneName) {
-        this.zoneName = zoneName;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
+    public void setName(String name) {
+        this.name = name;
     }
 }

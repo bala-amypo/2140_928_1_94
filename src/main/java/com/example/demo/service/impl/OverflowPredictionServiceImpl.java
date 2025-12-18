@@ -1,11 +1,12 @@
 package com.example.demo.service.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.example.demo.model.OverflowPrediction;
 import com.example.demo.repository.OverflowPredictionRepository;
 import com.example.demo.service.OverflowPredictionService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class OverflowPredictionServiceImpl implements OverflowPredictionService {
@@ -17,22 +18,28 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
     }
 
     @Override
-    public OverflowPrediction save(OverflowPrediction prediction) {
-        return repository.save(prediction);
+    public OverflowPrediction create(OverflowPrediction data) {
+        return repository.save(data);
     }
 
     @Override
-    public List<OverflowPrediction> findAll() {
+    public List<OverflowPrediction> getAll() {
         return repository.findAll();
     }
 
     @Override
-    public OverflowPrediction findById(Long id) {
+    public OverflowPrediction getById(Long id) {
         return repository.findById(id).orElse(null);
     }
 
     @Override
-    public void deleteById(Long id) {
+    public OverflowPrediction update(Long id, OverflowPrediction data) {
+        data.setId(id);
+        return repository.save(data);
+    }
+
+    @Override
+    public void delete(Long id) {
         repository.deleteById(id);
     }
 }
