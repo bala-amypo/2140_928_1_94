@@ -1,21 +1,16 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-import java.time.LocalDateTime;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class OverflowPrediction {
+public class Overflow {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private boolean overflowed;
 
-    @ManyToOne
-    private Bin bin;
-
-    private LocalDateTime predictedAt;
+    public Long getId() { return id; }
+    public boolean isOverflowed() { return overflowed; }
+    public void setOverflowed(boolean overflowed) { this.overflowed = overflowed; }
 }

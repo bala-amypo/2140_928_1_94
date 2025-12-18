@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.model.Bin;
 import com.example.demo.service.BinService;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -23,5 +24,20 @@ public class BinController {
     @GetMapping
     public List<Bin> getAll() {
         return binService.getAllBins();
+    }
+
+    @GetMapping("/{id}")
+    public Bin getById(@PathVariable Long id) {
+        return binService.getBinById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Bin update(@PathVariable Long id, @RequestBody Bin bin) {
+        return binService.updateBin(id, bin);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        binService.deleteBin(id);
     }
 }

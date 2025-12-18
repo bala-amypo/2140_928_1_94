@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.model.Zone;
 import com.example.demo.service.ZoneService;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -23,5 +24,20 @@ public class ZoneController {
     @GetMapping
     public List<Zone> getAll() {
         return zoneService.getAllZones();
+    }
+
+    @GetMapping("/{id}")
+    public Zone getById(@PathVariable Long id) {
+        return zoneService.getZoneById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Zone update(@PathVariable Long id, @RequestBody Zone zone) {
+        return zoneService.updateZone(id, zone);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        zoneService.deleteZone(id);
     }
 }

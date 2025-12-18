@@ -1,22 +1,16 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Bin {
+public class Zone {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String zoneName;
 
-    private String identifier;
-    private String locationDescription;
-    private Double latitude;
-    private Double longitude;
-    private Double capacityLiters;
-    private boolean active;
+    public Long getId() { return id; }
+    public String getZoneName() { return zoneName; }
+    public void setZoneName(String zoneName) { this.zoneName = zoneName; }
 }
