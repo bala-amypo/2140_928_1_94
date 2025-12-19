@@ -17,22 +17,33 @@ public class ZoneServiceImpl implements ZoneService {
     }
 
     @Override
-    public Zone save(Zone zone) {
+    public Zone create(Zone zone) {
         return repository.save(zone);
     }
 
     @Override
-    public List<Zone> findAll() {
-        return repository.findAll();
+    public Zone update(Long id, Zone zone) {
+        zone.setId(id);
+        return repository.save(zone);
     }
 
     @Override
-    public Zone findById(Long id) {
+    public Zone getById(Long id) {
         return repository.findById(id).orElse(null);
     }
 
     @Override
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public List<Zone> getAll() {
+        return repository.findAll();
+    }
+
+    @Override
+    public Zone deactivate(Long id) {
+        Zone zone = repository.findById(id).orElse(null);
+        if (zone != null) {
+            zone.setActive(false);
+            return repository.save(zone);
+        }
+        return null;
     }
 }

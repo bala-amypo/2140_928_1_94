@@ -17,22 +17,38 @@ public class BinServiceImpl implements BinService {
     }
 
     @Override
-    public Bin save(Bin bin) {
+    public Bin create(Bin bin) {
         return binRepository.save(bin);
     }
 
     @Override
-    public List<Bin> findAll() {
-        return binRepository.findAll();
+    public Bin update(Long id, Bin bin) {
+        bin.setId(id);
+        return binRepository.save(bin);
     }
 
     @Override
-    public Bin findById(Long id) {
+    public Bin getById(Long id) {
         return binRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Bin> getAll() {
+        return binRepository.findAll();
     }
 
     @Override
     public void delete(Long id) {
         binRepository.deleteById(id);
+    }
+
+    @Override
+    public Bin deactivate(Long id) {
+        Bin bin = binRepository.findById(id).orElse(null);
+        if (bin != null) {
+            bin.setActive(false);
+            return binRepository.save(bin);
+        }
+        return null;
     }
 }

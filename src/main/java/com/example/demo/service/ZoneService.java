@@ -1,15 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.model.Zone;
+import com.example.demo.model.OverflowPrediction;
 import java.util.List;
 
-public interface ZoneService {
-
-    Zone save(Zone zone);
-
-    List<Zone> findAll();
-
-    Zone findById(Long id);
-
-    void delete(Long id);
+public interface OverflowPredictionService {
+    OverflowPrediction generate(Long binId);
+    OverflowPrediction getById(Long id);
+    List<OverflowPrediction> getByBin(Long binId);
+    List<OverflowPrediction> getLatestByZone(Long zoneId);
 }

@@ -17,18 +17,23 @@ public class FillLevelRecordServiceImpl implements FillLevelRecordService {
     }
 
     @Override
-    public FillLevelRecord save(FillLevelRecord record) {
+    public FillLevelRecord create(FillLevelRecord record) {
         return repository.save(record);
     }
 
     @Override
-    public List<FillLevelRecord> findAll() {
-        return repository.findAll();
+    public FillLevelRecord getById(Long id) {
+        return repository.findById(id).orElse(null);
     }
 
     @Override
-    public FillLevelRecord findById(Long id) {
-        return repository.findById(id).orElse(null);
+    public List<FillLevelRecord> getByBin(Long binId) {
+        return repository.findByBinId(binId);
+    }
+
+    @Override
+    public List<FillLevelRecord> getRecentByBin(Long binId, int limit) {
+        return repository.findTopNByBinIdOrderByTimestampDesc(binId, limit);
     }
 
     @Override

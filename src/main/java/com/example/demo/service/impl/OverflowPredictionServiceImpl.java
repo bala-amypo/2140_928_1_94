@@ -17,22 +17,25 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
     }
 
     @Override
-    public OverflowPrediction save(OverflowPrediction prediction) {
+    public OverflowPrediction generate(Long binId) {
+        OverflowPrediction prediction = new OverflowPrediction();
+        prediction.setBinId(binId);
+        // Basic stub, just save empty prediction
         return repository.save(prediction);
     }
 
     @Override
-    public List<OverflowPrediction> findAll() {
-        return repository.findAll();
-    }
-
-    @Override
-    public OverflowPrediction findById(Long id) {
+    public OverflowPrediction getById(Long id) {
         return repository.findById(id).orElse(null);
     }
 
     @Override
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public List<OverflowPrediction> getByBin(Long binId) {
+        return repository.findByBinId(binId);
+    }
+
+    @Override
+    public List<OverflowPrediction> getLatestByZone(Long zoneId) {
+        return repository.findTopByZoneIdOrderByTimestampDesc(zoneId);
     }
 }

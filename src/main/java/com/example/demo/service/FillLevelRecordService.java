@@ -4,12 +4,9 @@ import com.example.demo.model.FillLevelRecord;
 import java.util.List;
 
 public interface FillLevelRecordService {
-
-    FillLevelRecord save(FillLevelRecord record);
-
-    List<FillLevelRecord> findAll();
-
-    FillLevelRecord findById(Long id);
-
+    FillLevelRecord create(FillLevelRecord record);
+    FillLevelRecord getById(Long id);
+    List<FillLevelRecord> getByBin(Long binId);
+    List<FillLevelRecord> getRecentByBin(Long binId, int limit);
     void delete(Long id);
 }
