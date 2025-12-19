@@ -6,49 +6,50 @@ import com.example.demo.service.BinService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BinServiceImpl implements BinService {
 
-    private final BinRepository binRepository;
+    private final BinRepository repository;
 
-    public BinServiceImpl(BinRepository binRepository) {
-        this.binRepository = binRepository;
+    public BinServiceImpl(BinRepository repository) {
+        this.repository = repository;
     }
 
     @Override
     public Bin create(Bin bin) {
-        return binRepository.save(bin);
+        return repository.save(bin);
     }
 
     @Override
     public Bin update(Long id, Bin bin) {
-        bin.setId(id);
-        return binRepository.save(bin);
+        Optional<Bin> existing = repository.findById(id);
+        if (existing.isPresent()) {
+            Bin b = existing.get();
+            b.setName(bin.getName()); // copy fields as needed
+            b.setLocation(bin.getLocation());
+            return repository.save(b);
+        }
+        return null;
     }
 
     @Override
     public Bin getById(Long id) {
-        return binRepository.findById(id).orElse(null);
+        return repository.findById(id).orElse(null);
     }
 
     @Override
     public List<Bin> getAll() {
-        return binRepository.findAll();
+        return repository.findAll();
     }
 
     @Override
-    public void delete(Long id) {
-        binRepository.deleteById(id);
-    }
-
-    @Override
-    public Bin deactivate(Long id) {
-        Bin bin = binRepository.findById(id).orElse(null);
-        if (bin != null) {
-            bin.setActive(false);
-            return binRepository.save(bin);
-        }
-        return null;
+    public void deactivate(Long id) {
+        Optional<Bin> existing = repository.findById(id);
+        existing.ifPresent(b -> {
+            b.setActive(false); // assuming you have an active field
+            repository.save(b);
+        });
     }
 }
