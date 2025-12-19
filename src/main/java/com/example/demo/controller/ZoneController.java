@@ -1,43 +1,43 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Bin;
-import com.example.demo.service.BinService;
+import com.example.demo.model.Zone;
+import com.example.demo.service.ZoneService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/bins")
-public class BinController {
+@RequestMapping("/api/zones")
+public class ZoneController {
 
-    private final BinService binService;
+    private final ZoneService zoneService;
 
-    public BinController(BinService binService) {
-        this.binService = binService;
+    public ZoneController(ZoneService zoneService) {
+        this.zoneService = zoneService;
     }
 
     @PostMapping
-    public Bin create(@RequestBody Bin bin) {
-        return binService.create(bin);
+    public Zone create(@RequestBody Zone zone) {
+        return zoneService.create(zone);
     }
 
     @GetMapping
-    public List<Bin> getAll() {
-        return binService.getAll();
+    public List<Zone> getAll() {
+        return zoneService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Bin getById(@PathVariable Long id) {
-        return binService.getById(id);
+    public Zone getById(@PathVariable Long id) {
+        return zoneService.getById(id);
     }
 
     @PutMapping("/{id}")
-    public Bin update(@PathVariable Long id, @RequestBody Bin bin) {
-        return binService.update(id, bin);
+    public Zone update(@PathVariable Long id, @RequestBody Zone zone) {
+        return zoneService.update(id, zone);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        binService.delete(id);
+        zoneService.delete(id);
     }
 }
