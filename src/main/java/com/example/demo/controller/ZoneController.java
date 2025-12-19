@@ -16,28 +16,28 @@ public class ZoneController {
         this.service = service;
     }
 
-    @PostMapping
-    public Zone create(@RequestBody Zone zone) {
-        return service.create(zone);
+    @PostMapping("/")
+    public Zone createZone(@RequestBody Zone zone) {
+        return service.createZone(zone);
     }
 
     @PutMapping("/{id}")
-    public Zone update(@PathVariable Long id, @RequestBody Zone zone) {
-        return service.update(id, zone);
-    }
-
-    @PutMapping("/{id}/deactivate")
-    public Zone deactivate(@PathVariable Long id) {
-        return service.deactivate(id);
+    public Zone updateZone(@PathVariable long id, @RequestBody Zone zone) {
+        return service.updateZone(id, zone);
     }
 
     @GetMapping("/{id}")
-    public Zone getById(@PathVariable Long id) {
-        return service.getById(id);
+    public Zone getZoneById(@PathVariable long id) {
+        return service.getZoneById(id);
     }
 
-    @GetMapping
-    public List<Zone> getAll() {
-        return service.getAll();
+    @GetMapping("/")
+    public List<Zone> getAllZones() {
+        return service.getAllZones();
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public void deactivateZone(@PathVariable long id) {
+        service.deactivateZone(id);
     }
 }
