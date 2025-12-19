@@ -1,11 +1,12 @@
 package com.example.demo.service;
 
-import com.example.demo.model.OverflowPrediction;
+import com.example.demo.model.Zone;
 import java.util.List;
 
-public interface OverflowPredictionService {
-    OverflowPrediction generate(Long binId);
-    OverflowPrediction getById(Long id);
-    List<OverflowPrediction> getByBin(Long binId);
-    List<OverflowPrediction> getLatestByZone(Long zoneId);
+public interface ZoneService {
+    Zone create(Zone zone);
+    Zone update(Long id, Zone zone);
+    Zone getById(Long id);
+    List<Zone> getAll();
+    void deactivate(Long id);
 }

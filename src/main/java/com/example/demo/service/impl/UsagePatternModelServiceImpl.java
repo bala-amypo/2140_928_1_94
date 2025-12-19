@@ -6,6 +6,7 @@ import com.example.demo.service.UsagePatternModelService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsagePatternModelServiceImpl implements UsagePatternModelService {
@@ -23,8 +24,14 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
 
     @Override
     public UsagePatternModel update(Long id, UsagePatternModel model) {
-        model.setId(id);
-        return repository.save(model);
+        Optional<UsagePatternModel> existing = repository.findById(id);
+        if (existing.isPresent()) {
+            UsagePatternModel m = existing.get();
+            m.setBinId(model.getBinId());
+            m.setPatternData(model.getPatternData());
+            return repository.save(m);
+        }
+        return null;
     }
 
     @Override

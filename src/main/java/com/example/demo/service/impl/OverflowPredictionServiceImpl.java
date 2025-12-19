@@ -18,9 +18,9 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
 
     @Override
     public OverflowPrediction generate(Long binId) {
+        // simple stub, in real app, add prediction logic
         OverflowPrediction prediction = new OverflowPrediction();
         prediction.setBinId(binId);
-        // Basic stub, just save empty prediction
         return repository.save(prediction);
     }
 
@@ -36,6 +36,6 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
 
     @Override
     public List<OverflowPrediction> getLatestByZone(Long zoneId) {
-        return repository.findTopByZoneIdOrderByTimestampDesc(zoneId);
+        return repository.findLatestByZoneId(zoneId);
     }
 }

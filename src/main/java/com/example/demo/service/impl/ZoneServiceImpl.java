@@ -6,6 +6,7 @@ import com.example.demo.service.ZoneService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ZoneServiceImpl implements ZoneService {
@@ -23,8 +24,14 @@ public class ZoneServiceImpl implements ZoneService {
 
     @Override
     public Zone update(Long id, Zone zone) {
-        zone.setId(id);
-        return repository.save(zone);
+        Optional<Zone> existing = repository.findById(id);
+        if (existing.isPresent()) {
+            Zone z = existing.get();
+            z.setName(zone.getName());
+            z.setLocation(zone.getLocation());
+            return repository.save(z);
+        }
+        return null;
     }
 
     @Override
@@ -38,12 +45,12 @@ public class ZoneServiceImpl implements ZoneService {
     }
 
     @Override
-    public Zone deactivate(Long id) {
-        Zone zone = repository.findById(id).orElse(null);
-        if (zone != null) {
-            zone.setActive(false);
-            return repository.save(zone);
-        }
-        return null;
+    public void deactivate(Long id) {
+        Optional<Zone> existing = repository.findById(id);
+        existing.ifPresent(z -> {
+            z.setActive(false);
+            repository.save(z);
+        });
     }
 }
+`
