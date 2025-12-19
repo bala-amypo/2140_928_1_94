@@ -4,9 +4,9 @@ import com.example.demo.model.Bin;
 import java.util.List;
 
 public interface BinService {
-    Bin create(Bin bin);
-    Bin update(Long id, Bin bin);
-    Bin getById(Long id);
-    List<Bin> getAll();
-    void deactivate(Long id);
+    Bin createBin(Bin bin);
+    Bin updateBin(long id, Bin bin);
+    Bin getBinById(long id);
+    List<Bin> getAllBins();
+    void deactivateBin(long id);
 }
