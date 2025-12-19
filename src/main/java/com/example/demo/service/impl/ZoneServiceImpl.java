@@ -6,7 +6,6 @@ import com.example.demo.service.ZoneService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ZoneServiceImpl implements ZoneService {
@@ -18,38 +17,31 @@ public class ZoneServiceImpl implements ZoneService {
     }
 
     @Override
-    public Zone create(Zone zone) {
+    public Zone createZone(Zone zone) {
         return repository.save(zone);
     }
 
     @Override
-    public Zone update(Long id, Zone zone) {
-        Optional<Zone> existing = repository.findById(id);
-        if (existing.isPresent()) {
-            Zone z = existing.get();
-            z.setName(zone.getName());
-            z.setLocation(zone.getLocation());
-            return repository.save(z);
-        }
-        return null;
+    public Zone updateZone(long id, Zone zone) {
+        Zone existing = getZoneById(id);
+        existing.setZoneName(zone.getZoneName());
+        return repository.save(existing);
     }
 
     @Override
-    public Zone getById(Long id) {
-        return repository.findById(id).orElse(null);
+    public Zone getZoneById(long id) {
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Zone not found"));
     }
 
     @Override
-    public List<Zone> getAll() {
+    public List<Zone> getAllZones() {
         return repository.findAll();
     }
 
     @Override
-    public void deactivate(Long id) {
-        Optional<Zone> existing = repository.findById(id);
-        existing.ifPresent(z -> {
-            z.setActive(false);
-            repository.save(z);
-        });
+    public void deactivateZone(long id) {
+        Zone z = getZoneById(id);
+        z.setActive(false);
+        repository.save(z);
     }
 }

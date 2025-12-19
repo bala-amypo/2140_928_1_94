@@ -1,54 +1,57 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.Bin;
+import com.example.demo.model.Zone;
 import com.example.demo.repository.BinRepository;
+import com.example.demo.repository.ZoneRepository;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.service.BinService;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BinServiceImpl implements BinService {
 
-    private final BinRepository repository;
+    private final BinRepository binRepository;
+    private final ZoneRepository zoneRepository;
 
-    public BinServiceImpl(BinRepository repository) {
-        this.repository = repository;
+    public BinServiceImpl(BinRepository binRepository, ZoneRepository zoneRepository) {
+        this.binRepository = binRepository;
+        this.zoneRepository = zoneRepository;
     }
 
     @Override
-    public Bin create(Bin bin) {
-        return repository.save(bin);
+    public Bin createBin(Bin bin) {
+        return binRepository.save(bin);
     }
 
     @Override
-    public Bin update(Long id, Bin bin) {
-        Optional<Bin> existing = repository.findById(id);
-        if (existing.isPresent()) {
-            Bin b = existing.get();
-            b.setName(bin.getName());
-            b.setLocation(bin.getLocation());
-            return repository.save(b);
-        }
-        return null;
+    public Bin updateBin(long id, Bin bin) {
+        Bin existing = getBinById(id);
+        existing.setIdentifier(bin.getIdentifier());
+        existing.setCapacityLiters(bin.getCapacityLiters());
+        existing.setLocationDescription(bin.getLocationDescription());
+        existing.setLatitude(bin.getLatitude());
+        existing.setLongitude(bin.getLongitude());
+        existing.setZone(bin.getZone());
+        return binRepository.save(existing);
     }
 
     @Override
-    public Bin getById(Long id) {
-        return repository.findById(id).orElse(null);
+    public Bin getBinById(long id) {
+        return binRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
     }
 
     @Override
-    public List<Bin> getAll() {
-        return repository.findAll();
+    public List<Bin> getAllBins() {
+        return binRepository.findAll();
     }
 
     @Override
-    public void deactivate(Long id) {
-        Optional<Bin> existing = repository.findById(id);
-        existing.ifPresent(b -> {
-            b.setActive(false);
-            repository.save(b);
-        });
+    public void deactivateBin(long id) {
+        Bin bin = getBinById(id);
+        bin.setActive(false);
+        binRepository.save(bin);
     }
 }
