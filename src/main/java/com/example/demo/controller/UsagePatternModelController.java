@@ -2,8 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.model.UsagePatternModel;
 import com.example.demo.service.UsagePatternModelService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -16,28 +16,24 @@ public class UsagePatternModelController {
         this.service = service;
     }
 
-    @PostMapping
-    public UsagePatternModel create(@RequestBody UsagePatternModel model) {
-        return service.create(model);
+    @PostMapping("/")
+    public ResponseEntity<UsagePatternModel> createModel(@RequestBody UsagePatternModel model) {
+        return ResponseEntity.ok(service.createModel(model));
     }
 
     @PutMapping("/{id}")
-    public UsagePatternModel update(@PathVariable Long id, @RequestBody UsagePatternModel model) {
-        return service.update(id, model);
+    public ResponseEntity<UsagePatternModel> updateModel(@PathVariable long id,
+                                                         @RequestBody UsagePatternModel model) {
+        return ResponseEntity.ok(service.updateModel(id, model));
     }
 
     @GetMapping("/bin/{binId}")
-    public UsagePatternModel getByBin(@PathVariable Long binId) {
-        return service.getByBin(binId);
+    public ResponseEntity<UsagePatternModel> getModelForBin(@PathVariable long binId) {
+        return ResponseEntity.ok(service.getModelForBin(binId));
     }
 
-    @GetMapping
-    public List<UsagePatternModel> getAll() {
-        return service.getAll();
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
+    @GetMapping("/")
+    public ResponseEntity<List<UsagePatternModel>> getAllModels() {
+        return ResponseEntity.ok(service.getAllModels());
     }
 }
