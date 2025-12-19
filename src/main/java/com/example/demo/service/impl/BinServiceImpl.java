@@ -10,30 +10,29 @@ import java.util.List;
 @Service
 public class BinServiceImpl implements BinService {
 
-    private final BinRepository repository;
+    private final BinRepository binRepository;
 
-    public BinServiceImpl(BinRepository repository) {
-        this.repository = repository;
+    public BinServiceImpl(BinRepository binRepository) {
+        this.binRepository = binRepository;
     }
 
-    public Bin create(Bin bin) {
-        return repository.save(bin);
+    @Override
+    public Bin save(Bin bin) {
+        return binRepository.save(bin);
     }
 
-    public List<Bin> getAll() {
-        return repository.findAll();
+    @Override
+    public List<Bin> findAll() {
+        return binRepository.findAll();
     }
 
-    public Bin getById(Long id) {
-        return repository.findById(id).orElse(null);
+    @Override
+    public Bin findById(Long id) {
+        return binRepository.findById(id).orElse(null);
     }
 
-    public Bin update(Long id, Bin bin) {
-        bin.setId(id);
-        return repository.save(bin);
-    }
-
+    @Override
     public void delete(Long id) {
-        repository.deleteById(id);
+        binRepository.deleteById(id);
     }
 }
