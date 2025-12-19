@@ -15,7 +15,6 @@ public class UsagePatternModel {
 
     private double avgDailyIncreaseWeekday;
     private double avgDailyIncreaseWeekend;
-
     private LocalDateTime lastUpdated = LocalDateTime.now();
 
     // Getters & Setters

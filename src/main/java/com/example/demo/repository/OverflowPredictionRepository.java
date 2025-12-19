@@ -1,13 +1,16 @@
 package com.example.demo.repository;
 
+import com.example.demo.model.Bin;
 import com.example.demo.model.OverflowPrediction;
+import com.example.demo.model.Zone;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
+import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
-@Repository
 public interface OverflowPredictionRepository extends JpaRepository<OverflowPrediction, Long> {
-    List<OverflowPrediction> findByBinId(Long binId);
-    List<OverflowPrediction> findTopByZoneIdOrderByTimestampDesc(Long zoneId);
+
+    List<OverflowPrediction> findByBin(Bin bin);
+
+    @Query("SELECT o FROM OverflowPrediction o WHERE o.bin.zone = :zone ORDER BY o.createdAt DESC")
+    List<OverflowPrediction> findLatestPredictionsForZone(Zone zone);
 }

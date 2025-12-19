@@ -25,7 +25,6 @@ public class Bin {
     private int capacityLiters;
 
     private boolean active = true;
-
     private LocalDateTime createdAt = LocalDateTime.now();
     private LocalDateTime updatedAt = LocalDateTime.now();
 
