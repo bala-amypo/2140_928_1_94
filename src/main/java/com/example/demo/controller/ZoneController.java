@@ -27,7 +27,7 @@ public class ZoneController {
     }
 
     @GetMapping("/{id}")
-    public Zone getZoneById(@PathVariable long id) {
+    public Zone getZone(@PathVariable long id) {
         return service.getZoneById(id);
     }
 

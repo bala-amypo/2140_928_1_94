@@ -22,7 +22,7 @@ public class OverflowPredictionController {
     }
 
     @GetMapping("/{id}")
-    public OverflowPrediction getPredictionById(@PathVariable long id) {
+    public OverflowPrediction getPrediction(@PathVariable long id) {
         return service.getPredictionById(id);
     }
 
