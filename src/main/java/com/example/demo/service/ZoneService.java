@@ -5,8 +5,8 @@ import java.util.List;
 
 public interface ZoneService {
     Zone createZone(Zone zone);
-    Zone updateZone(long id, Zone zone);
-    Zone getZoneById(long id);
+    Zone getZoneById(Long id);
     List<Zone> getAllZones();
-    void deactivateZone(long id);
+    Zone updateZone(Long id, Zone zone);
+    void deactivateZone(Long id);
 }
