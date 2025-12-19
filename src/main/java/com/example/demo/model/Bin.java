@@ -1,7 +1,9 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Bin {
@@ -10,6 +12,7 @@ public class Bin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Identifier is required")
     @Column(unique = true, nullable = false)
     private String identifier;
 
@@ -17,18 +20,17 @@ public class Bin {
     private Double latitude;
     private Double longitude;
 
+    @NotNull(message = "Zone is required")
     @ManyToOne
     @JoinColumn(name = "zone_id")
     private Zone zone;
 
-    @Column(nullable = false)
+    @Min(value = 1, message = "Bin capacity must be greater than 0")
     private int capacityLiters;
 
     private boolean active = true;
-    private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime updatedAt = LocalDateTime.now();
 
-    // Getters & Setters
+    // getters & setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -52,10 +54,4 @@ public class Bin {
 
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }

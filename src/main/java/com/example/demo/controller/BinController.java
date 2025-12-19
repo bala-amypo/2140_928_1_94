@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Bin;
 import com.example.demo.service.BinService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,17 +18,17 @@ public class BinController {
     }
 
     @PostMapping("/")
-    public Bin createBin(@RequestBody Bin bin) {
+    public Bin createBin(@Valid @RequestBody Bin bin) {
         return binService.createBin(bin);
     }
 
     @PutMapping("/{id}")
-    public Bin updateBin(@PathVariable long id, @RequestBody Bin bin) {
+    public Bin updateBin(@PathVariable long id, @Valid @RequestBody Bin bin) {
         return binService.updateBin(id, bin);
     }
 
     @GetMapping("/{id}")
-    public Bin getBinById(@PathVariable long id) {
+    public Bin getBin(@PathVariable long id) {
         return binService.getBinById(id);
     }
 
@@ -37,7 +38,7 @@ public class BinController {
     }
 
     @PutMapping("/{id}/deactivate")
-    public void deactivateBin(@PathVariable long id) {
+    public void deactivate(@PathVariable long id) {
         binService.deactivateBin(id);
     }
 }
