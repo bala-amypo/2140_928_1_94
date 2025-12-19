@@ -1,7 +1,7 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.OverflowPrediction;
+import com.example.demo.model.Zone;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OverflowPredictionRepository extends JpaRepository<OverflowPrediction, Long> {
+public interface ZoneRepository extends JpaRepository<Zone, Long> {
 }
