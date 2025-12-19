@@ -1,10 +1,15 @@
 package com.example.demo.service;
 
-import com.example.demo.model.User;
+import com.example.demo.model.FillLevelRecord;
 import java.util.List;
 
-public interface UserService {
-    User save(User user);
-    List<User> findAll();
+public interface FillLevelRecordService {
+
+    FillLevelRecord save(FillLevelRecord record);
+
+    List<FillLevelRecord> findAll();
+
+    FillLevelRecord findById(Long id);
+
     void delete(Long id);
 }
