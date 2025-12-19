@@ -6,6 +6,7 @@ import com.example.demo.repository.ZoneRepository;
 import com.example.demo.service.ZoneService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -19,16 +20,20 @@ public class ZoneServiceImpl implements ZoneService {
 
     @Override
     public Zone createZone(Zone zone) {
+        zone.setActive(true);
+        zone.setCreatedAt(LocalDateTime.now());
+        zone.setUpdatedAt(LocalDateTime.now());
         return zoneRepository.save(zone);
     }
 
     @Override
-    public Zone updateZone(long id, Zone zone) {
-        Zone existing = zoneRepository.findById(id)
+    public Zone updateZone(long id, Zone zoneDetails) {
+        Zone zone = zoneRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Zone not found"));
-        existing.setZoneName(zone.getZoneName());
-        existing.setActive(zone.isActive());
-        return zoneRepository.save(existing);
+        zone.setZoneName(zoneDetails.getZoneName());
+        zone.setActive(zoneDetails.isActive());
+        zone.setUpdatedAt(LocalDateTime.now());
+        return zoneRepository.save(zone);
     }
 
     @Override
@@ -47,6 +52,7 @@ public class ZoneServiceImpl implements ZoneService {
         Zone zone = zoneRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Zone not found"));
         zone.setActive(false);
+        zone.setUpdatedAt(LocalDateTime.now());
         zoneRepository.save(zone);
     }
 }

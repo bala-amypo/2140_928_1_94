@@ -1,9 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.Bin;
-import com.example.demo.model.OverflowPrediction;
-import com.example.demo.model.UsagePatternModel;
+import com.example.demo.model.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.OverflowPredictionService;
 import org.springframework.stereotype.Service;
@@ -14,22 +12,16 @@ import java.util.List;
 @Service
 public class OverflowPredictionServiceImpl implements OverflowPredictionService {
 
-    private final BinRepository binRepository;
-    private final FillLevelRecordRepository fillRecordRepository;
-    private final UsagePatternModelRepository modelRepository;
     private final OverflowPredictionRepository predictionRepository;
-    private final ZoneRepository zoneRepository;
+    private final BinRepository binRepository;
+    private final UsagePatternModelRepository modelRepository;
 
-    public OverflowPredictionServiceImpl(BinRepository binRepository,
-                                         FillLevelRecordRepository fillRecordRepository,
-                                         UsagePatternModelRepository modelRepository,
-                                         OverflowPredictionRepository predictionRepository,
-                                         ZoneRepository zoneRepository) {
-        this.binRepository = binRepository;
-        this.fillRecordRepository = fillRecordRepository;
-        this.modelRepository = modelRepository;
+    public OverflowPredictionServiceImpl(OverflowPredictionRepository predictionRepository,
+                                         BinRepository binRepository,
+                                         UsagePatternModelRepository modelRepository) {
         this.predictionRepository = predictionRepository;
-        this.zoneRepository = zoneRepository;
+        this.binRepository = binRepository;
+        this.modelRepository = modelRepository;
     }
 
     @Override
@@ -38,19 +30,16 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
                 .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
 
         UsagePatternModel model = modelRepository.findTopByBinOrderByLastUpdatedDesc(bin)
-                .orElseThrow(() -> new ResourceNotFoundException("UsagePatternModel not found for bin"));
+                .orElseThrow(() -> new ResourceNotFoundException("Model not found for bin"));
 
-        // Simple linear prediction based on last known fill + avg increase
         OverflowPrediction prediction = new OverflowPrediction();
         prediction.setBin(bin);
 
-        // Here we use a very simple example: assume average increase for weekday/weekend
-        LocalDateTime now = LocalDateTime.now();
-        int avgIncrease = model.getAvgDailyIncreaseWeekday() > 0 ? (int) model.getAvgDailyIncreaseWeekday() : 1;
+        double dailyIncrease = model.getAvgDailyIncreaseWeekday(); // simplify for demo
+        double remainingCapacity = bin.getCapacityLiters() - 0; // assume current level 0
+        long hoursToOverflow = (long) (remainingCapacity / dailyIncrease);
 
-        // For simplicity, assume predicted overflow time is now + (capacity / avgIncrease) days
-        double daysToOverflow = (double) bin.getCapacityLiters() / avgIncrease;
-        prediction.setPredictedOverflowTime(now.plusHours((long) (daysToOverflow * 24)));
+        prediction.setPredictedOverflowTime(LocalDateTime.now().plusHours(hoursToOverflow));
         prediction.setCreatedAt(LocalDateTime.now());
 
         return predictionRepository.save(prediction);
@@ -59,7 +48,7 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
     @Override
     public OverflowPrediction getPredictionById(long id) {
         return predictionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("OverflowPrediction not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Prediction not found"));
     }
 
     @Override
@@ -71,8 +60,8 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
 
     @Override
     public List<OverflowPrediction> getLatestPredictionsForZone(long zoneId) {
-        var zone = zoneRepository.findById(zoneId)
-                .orElseThrow(() -> new ResourceNotFoundException("Zone not found"));
+        Zone zone = new Zone();
+        zone.setId(zoneId);
         return predictionRepository.findLatestPredictionsForZone(zone);
     }
 }

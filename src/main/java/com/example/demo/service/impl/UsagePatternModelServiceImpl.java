@@ -1,6 +1,5 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Bin;
 import com.example.demo.model.UsagePatternModel;
@@ -26,9 +25,6 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
 
     @Override
     public UsagePatternModel createModel(UsagePatternModel model) {
-        if (model.getAvgDailyIncreaseWeekday() < 0 || model.getAvgDailyIncreaseWeekend() < 0) {
-            throw new BadRequestException("Daily increase cannot be negative");
-        }
         Bin bin = binRepository.findById(model.getBin().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
         model.setBin(bin);
@@ -37,18 +33,12 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
     }
 
     @Override
-    public UsagePatternModel updateModel(long id, UsagePatternModel model) {
+    public UsagePatternModel updateModel(long id, UsagePatternModel modelDetails) {
         UsagePatternModel existing = modelRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("UsagePatternModel not found"));
-
-        if (model.getAvgDailyIncreaseWeekday() < 0 || model.getAvgDailyIncreaseWeekend() < 0) {
-            throw new BadRequestException("Daily increase cannot be negative");
-        }
-
-        existing.setAvgDailyIncreaseWeekday(model.getAvgDailyIncreaseWeekday());
-        existing.setAvgDailyIncreaseWeekend(model.getAvgDailyIncreaseWeekend());
+                .orElseThrow(() -> new ResourceNotFoundException("Model not found"));
+        existing.setAvgDailyIncreaseWeekday(modelDetails.getAvgDailyIncreaseWeekday());
+        existing.setAvgDailyIncreaseWeekend(modelDetails.getAvgDailyIncreaseWeekend());
         existing.setLastUpdated(LocalDateTime.now());
-
         return modelRepository.save(existing);
     }
 
@@ -57,7 +47,7 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
         Bin bin = binRepository.findById(binId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
         return modelRepository.findTopByBinOrderByLastUpdatedDesc(bin)
-                .orElseThrow(() -> new ResourceNotFoundException("UsagePatternModel not found for bin"));
+                .orElseThrow(() -> new ResourceNotFoundException("Model not found for bin"));
     }
 
     @Override
