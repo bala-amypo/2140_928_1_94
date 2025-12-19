@@ -27,7 +27,7 @@ public class FillLevelRecordServiceImpl implements FillLevelRecordService {
     @Override
     public FillLevelRecord createRecord(FillLevelRecord record) {
         if (record.getRecordedAt().isAfter(LocalDateTime.now())) {
-            throw new BadRequestException("recordedAt cannot be in the future");
+            throw new BadRequestException("Recorded date cannot be in the future");
         }
         Bin bin = binRepository.findById(record.getBin().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));

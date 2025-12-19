@@ -1,7 +1,9 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Bin;
+import com.example.demo.model.Zone;
 import com.example.demo.repository.BinRepository;
 import com.example.demo.repository.ZoneRepository;
 import com.example.demo.service.BinService;
@@ -24,7 +26,7 @@ public class BinServiceImpl implements BinService {
     @Override
     public Bin createBin(Bin bin) {
         if (bin.getCapacityLiters() <= 0) {
-            throw new IllegalArgumentException("capacity must be greater than 0");
+            throw new BadRequestException("Bin capacity must be greater than 0");
         }
         bin.setActive(true);
         bin.setCreatedAt(LocalDateTime.now());
@@ -36,7 +38,6 @@ public class BinServiceImpl implements BinService {
     public Bin updateBin(long id, Bin binDetails) {
         Bin bin = binRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
-
         bin.setIdentifier(binDetails.getIdentifier());
         bin.setLocationDescription(binDetails.getLocationDescription());
         bin.setLatitude(binDetails.getLatitude());
@@ -44,7 +45,6 @@ public class BinServiceImpl implements BinService {
         bin.setCapacityLiters(binDetails.getCapacityLiters());
         bin.setZone(binDetails.getZone());
         bin.setUpdatedAt(LocalDateTime.now());
-
         return binRepository.save(bin);
     }
 
