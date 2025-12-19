@@ -4,17 +4,22 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class OverflowPrediction {
+public class FillLevelRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Bin bin;
 
-    private LocalDateTime predictedOverflowTime;
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(nullable = false)
+    private int fillPercentage;
+
+    @Column(nullable = false)
+    private LocalDateTime recordedAt;
+
+    private boolean isWeekend;
 
     // Getters & Setters
     public Long getId() { return id; }
@@ -23,9 +28,12 @@ public class OverflowPrediction {
     public Bin getBin() { return bin; }
     public void setBin(Bin bin) { this.bin = bin; }
 
-    public LocalDateTime getPredictedOverflowTime() { return predictedOverflowTime; }
-    public void setPredictedOverflowTime(LocalDateTime predictedOverflowTime) { this.predictedOverflowTime = predictedOverflowTime; }
+    public int getFillPercentage() { return fillPercentage; }
+    public void setFillPercentage(int fillPercentage) { this.fillPercentage = fillPercentage; }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getRecordedAt() { return recordedAt; }
+    public void setRecordedAt(LocalDateTime recordedAt) { this.recordedAt = recordedAt; }
+
+    public boolean isWeekend() { return isWeekend; }
+    public void setWeekend(boolean weekend) { isWeekend = weekend; }
 }
