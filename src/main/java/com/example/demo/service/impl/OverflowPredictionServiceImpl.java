@@ -16,23 +16,22 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
         this.repository = repository;
     }
 
-    public OverflowPrediction create(OverflowPrediction prediction) {
+    @Override
+    public OverflowPrediction save(OverflowPrediction prediction) {
         return repository.save(prediction);
     }
 
-    public List<OverflowPrediction> getAll() {
+    @Override
+    public List<OverflowPrediction> findAll() {
         return repository.findAll();
     }
 
-    public OverflowPrediction getById(Long id) {
+    @Override
+    public OverflowPrediction findById(Long id) {
         return repository.findById(id).orElse(null);
     }
 
-    public OverflowPrediction update(Long id, OverflowPrediction prediction) {
-        prediction.setId(id);
-        return repository.save(prediction);
-    }
-
+    @Override
     public void delete(Long id) {
         repository.deleteById(id);
     }

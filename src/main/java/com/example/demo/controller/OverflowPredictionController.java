@@ -1,46 +1,38 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.OverflowPrediction;
-import com.example.demo.service.OverflowPredictionService;
+import com.example.demo.model.FillLevelRecord;
+import com.example.demo.service.FillLevelRecordService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/overflow-predictions")
-public class OverflowPredictionController {
+@RequestMapping("/fill-level-records")
+public class FillLevelRecordController {
 
-    private final OverflowPredictionService overflowPredictionService;
+    private final FillLevelRecordService service;
 
-    public OverflowPredictionController(OverflowPredictionService overflowPredictionService) {
-        this.overflowPredictionService = overflowPredictionService;
+    public FillLevelRecordController(FillLevelRecordService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public OverflowPrediction create(@RequestBody OverflowPrediction prediction) {
-        return overflowPredictionService.create(prediction);
+    public FillLevelRecord save(@RequestBody FillLevelRecord record) {
+        return service.save(record);
     }
 
     @GetMapping
-    public List<OverflowPrediction> getAll() {
-        return overflowPredictionService.getAll();
+    public List<FillLevelRecord> findAll() {
+        return service.findAll();
     }
 
     @GetMapping("/{id}")
-    public OverflowPrediction getById(@PathVariable Long id) {
-        return overflowPredictionService.getById(id);
-    }
-
-    @PutMapping("/{id}")
-    public OverflowPrediction update(
-            @PathVariable Long id,
-            @RequestBody OverflowPrediction prediction
-    ) {
-        return overflowPredictionService.update(id, prediction);
+    public FillLevelRecord findById(@PathVariable Long id) {
+        return service.findById(id);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        overflowPredictionService.delete(id);
+        service.delete(id);
     }
 }

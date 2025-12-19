@@ -1,7 +1,7 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.FillLevelRecord;
+import com.example.demo.model.OverflowPrediction;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FillLevelRecordRepository extends JpaRepository<FillLevelRecord, Long> {
+public interface OverflowPredictionRepository extends JpaRepository<OverflowPrediction, Long> {
 }

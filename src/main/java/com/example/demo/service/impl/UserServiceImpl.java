@@ -16,23 +16,22 @@ public class UserServiceImpl implements UserService {
         this.repository = repository;
     }
 
-    public User create(User user) {
+    @Override
+    public User save(User user) {
         return repository.save(user);
     }
 
-    public List<User> getAll() {
+    @Override
+    public List<User> findAll() {
         return repository.findAll();
     }
 
-    public User getById(Long id) {
+    @Override
+    public User findById(Long id) {
         return repository.findById(id).orElse(null);
     }
 
-    public User update(Long id, User user) {
-        user.setId(id);
-        return repository.save(user);
-    }
-
+    @Override
     public void delete(Long id) {
         repository.deleteById(id);
     }
