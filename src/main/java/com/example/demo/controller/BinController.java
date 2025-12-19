@@ -1,48 +1,12 @@
-package com.example.demo.controller;
+package com.example.demo.service;
 
 import com.example.demo.model.Bin;
-import com.example.demo.service.BinService;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/bins")
-public class BinController {
-
-    private final BinService binService;
-
-    public BinController(BinService binService) {
-        this.binService = binService;
-    }
-
-    @PostMapping
-    public Bin create(@RequestBody Bin bin) {
-        return binService.create(bin);
-    }
-
-    @GetMapping
-    public List<Bin> getAll() {
-        return binService.getAll();
-    }
-
-    @GetMapping("/{id}")
-    public Bin getById(@PathVariable Long id) {
-        return binService.getById(id);
-    }
-
-    @PutMapping("/{id}")
-    public Bin update(@PathVariable Long id, @RequestBody Bin bin) {
-        return binService.update(id, bin);
-    }
-
-    @PutMapping("/{id}/deactivate")
-    public Bin deactivate(@PathVariable Long id) {
-        return binService.deactivate(id);
-    }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        binService.delete(id);
-    }
+public interface BinService {
+    Bin create(Bin bin);
+    Bin update(Long id, Bin bin);
+    Bin getById(Long id);
+    List<Bin> getAll();
+    void deactivate(Long id);
 }

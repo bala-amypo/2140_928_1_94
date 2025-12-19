@@ -4,7 +4,6 @@ import com.example.demo.model.Bin;
 import com.example.demo.repository.BinRepository;
 import com.example.demo.service.BinService;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +26,7 @@ public class BinServiceImpl implements BinService {
         Optional<Bin> existing = repository.findById(id);
         if (existing.isPresent()) {
             Bin b = existing.get();
-            b.setName(bin.getName()); // copy fields as needed
+            b.setName(bin.getName());
             b.setLocation(bin.getLocation());
             return repository.save(b);
         }
@@ -48,7 +47,7 @@ public class BinServiceImpl implements BinService {
     public void deactivate(Long id) {
         Optional<Bin> existing = repository.findById(id);
         existing.ifPresent(b -> {
-            b.setActive(false); // assuming you have an active field
+            b.setActive(false);
             repository.save(b);
         });
     }
