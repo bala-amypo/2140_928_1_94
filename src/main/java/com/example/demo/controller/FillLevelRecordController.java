@@ -2,8 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.model.FillLevelRecord;
 import com.example.demo.service.FillLevelRecordService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -16,26 +16,24 @@ public class FillLevelRecordController {
         this.service = service;
     }
 
-    @PostMapping
-    public FillLevelRecord create(@RequestBody FillLevelRecord record) {
-        return service.create(record);
+    @PostMapping("/")
+    public ResponseEntity<FillLevelRecord> createRecord(@RequestBody FillLevelRecord record) {
+        return ResponseEntity.ok(service.createRecord(record));
     }
 
     @GetMapping("/{id}")
-    public FillLevelRecord getById(@PathVariable Long id) {
-        return service.getById(id);
+    public ResponseEntity<FillLevelRecord> getRecord(@PathVariable long id) {
+        return ResponseEntity.ok(service.getRecordById(id));
     }
 
     @GetMapping("/bin/{binId}")
-    public List<FillLevelRecord> getByBin(@PathVariable Long binId) {
-        return service.getByBin(binId);
+    public ResponseEntity<List<FillLevelRecord>> getRecordsForBin(@PathVariable long binId) {
+        return ResponseEntity.ok(service.getRecordsForBin(binId));
     }
 
     @GetMapping("/bin/{binId}/recent")
-    public List<FillLevelRecord> getRecentByBin(
-            @PathVariable Long binId,
-            @RequestParam int limit
-    ) {
-        return service.getRecentByBin(binId, limit);
+    public ResponseEntity<List<FillLevelRecord>> getRecentRecords(
+            @PathVariable long binId, @RequestParam int limit) {
+        return ResponseEntity.ok(service.getRecentRecords(binId, limit));
     }
 }
