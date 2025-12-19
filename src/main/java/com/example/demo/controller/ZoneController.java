@@ -7,32 +7,37 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/zones")
+@RequestMapping("/api/zones")
 public class ZoneController {
 
-    private final ZoneService zoneService;
+    private final ZoneService service;
 
-    public ZoneController(ZoneService zoneService) {
-        this.zoneService = zoneService;
+    public ZoneController(ZoneService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public Zone save(@RequestBody Zone zone) {
-        return zoneService.save(zone);
+    public Zone create(@RequestBody Zone zone) {
+        return service.create(zone);
     }
 
-    @GetMapping
-    public List<Zone> findAll() {
-        return zoneService.findAll();
+    @PutMapping("/{id}")
+    public Zone update(@PathVariable Long id, @RequestBody Zone zone) {
+        return service.update(id, zone);
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public Zone deactivate(@PathVariable Long id) {
+        return service.deactivate(id);
     }
 
     @GetMapping("/{id}")
-    public Zone findById(@PathVariable Long id) {
-        return zoneService.findById(id);
+    public Zone getById(@PathVariable Long id) {
+        return service.getById(id);
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        zoneService.delete(id);
+    @GetMapping
+    public List<Zone> getAll() {
+        return service.getAll();
     }
 }

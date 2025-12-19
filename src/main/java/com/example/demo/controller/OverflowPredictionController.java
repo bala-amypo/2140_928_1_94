@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/overflow-predictions")
+@RequestMapping("/api/predictions")
 public class OverflowPredictionController {
 
     private final OverflowPredictionService service;
@@ -16,23 +16,23 @@ public class OverflowPredictionController {
         this.service = service;
     }
 
-    @PostMapping
-    public OverflowPrediction save(@RequestBody OverflowPrediction prediction) {
-        return service.save(prediction);
-    }
-
-    @GetMapping
-    public List<OverflowPrediction> findAll() {
-        return service.findAll();
+    @PostMapping("/generate/{binId}")
+    public OverflowPrediction generate(@PathVariable Long binId) {
+        return service.generate(binId);
     }
 
     @GetMapping("/{id}")
-    public OverflowPrediction findById(@PathVariable Long id) {
-        return service.findById(id);
+    public OverflowPrediction getById(@PathVariable Long id) {
+        return service.getById(id);
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
+    @GetMapping("/bin/{binId}")
+    public List<OverflowPrediction> getByBin(@PathVariable Long binId) {
+        return service.getByBin(binId);
+    }
+
+    @GetMapping("/zone/{zoneId}/latest")
+    public List<OverflowPrediction> getLatestByZone(@PathVariable Long zoneId) {
+        return service.getLatestByZone(zoneId);
     }
 }

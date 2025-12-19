@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/bins")
+@RequestMapping("/api/bins")
 public class BinController {
 
     private final BinService binService;
@@ -17,18 +17,28 @@ public class BinController {
     }
 
     @PostMapping
-    public Bin save(@RequestBody Bin bin) {
-        return binService.save(bin);
+    public Bin create(@RequestBody Bin bin) {
+        return binService.create(bin);
     }
 
     @GetMapping
-    public List<Bin> findAll() {
-        return binService.findAll();
+    public List<Bin> getAll() {
+        return binService.getAll();
     }
 
     @GetMapping("/{id}")
-    public Bin findById(@PathVariable Long id) {
-        return binService.findById(id);
+    public Bin getById(@PathVariable Long id) {
+        return binService.getById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Bin update(@PathVariable Long id, @RequestBody Bin bin) {
+        return binService.update(id, bin);
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public Bin deactivate(@PathVariable Long id) {
+        return binService.deactivate(id);
     }
 
     @DeleteMapping("/{id}")
