@@ -7,10 +7,13 @@ import com.example.demo.repository.BinRepository;
 import com.example.demo.repository.ZoneRepository;
 import com.example.demo.service.BinService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Transactional
 public class BinServiceImpl implements BinService {
 
     private final BinRepository binRepository;
@@ -24,32 +27,17 @@ public class BinServiceImpl implements BinService {
     @Override
     public Bin createBin(Bin bin) {
         Zone zone = zoneRepository.findById(bin.getZone().getId())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Zone not found with id " + bin.getZone().getId())
-                );
-
+                .orElseThrow(() -> new ResourceNotFoundException("Zone not found with id " + bin.getZone().getId()));
         bin.setZone(zone);
+        bin.setCreatedAt(LocalDateTime.now());
+        bin.setUpdatedAt(LocalDateTime.now());
         return binRepository.save(bin);
     }
 
     @Override
-    public Bin updateBin(long id, Bin bin) {
-        Bin existing = getBinById(id);
-        existing.setIdentifier(bin.getIdentifier());
-        existing.setLocationDescription(bin.getLocationDescription());
-        existing.setLatitude(bin.getLatitude());
-        existing.setLongitude(bin.getLongitude());
-        existing.setCapacityLiters(bin.getCapacityLiters());
-        existing.setZone(bin.getZone());
-        return binRepository.save(existing);
-    }
-
-    @Override
-    public Bin getBinById(long id) {
+    public Bin getBinById(Long id) {
         return binRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Bin not found with id " + id)
-                );
+                .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id " + id));
     }
 
     @Override
@@ -58,9 +46,23 @@ public class BinServiceImpl implements BinService {
     }
 
     @Override
-    public void deactivateBin(long id) {
+    public Bin updateBin(Long id, Bin bin) {
+        Bin existing = getBinById(id);
+        existing.setIdentifier(bin.getIdentifier());
+        existing.setLocationDescription(bin.getLocationDescription());
+        existing.setLatitude(bin.getLatitude());
+        existing.setLongitude(bin.getLongitude());
+        existing.setCapacityLiters(bin.getCapacityLiters());
+        existing.setActive(bin.getActive());
+        existing.setUpdatedAt(LocalDateTime.now());
+        return binRepository.save(existing);
+    }
+
+    @Override
+    public void deactivateBin(Long id) {
         Bin bin = getBinById(id);
         bin.setActive(false);
+        bin.setUpdatedAt(LocalDateTime.now());
         binRepository.save(bin);
     }
 }

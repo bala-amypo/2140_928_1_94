@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.model.Bin;
 import com.example.demo.service.BinService;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,28 +18,29 @@ public class BinController {
         this.binService = binService;
     }
 
-    @PostMapping("/")
-    public Bin createBin(@Valid @RequestBody Bin bin) {
-        return binService.createBin(bin);
-    }
-
-    @PutMapping("/{id}")
-    public Bin updateBin(@PathVariable long id, @Valid @RequestBody Bin bin) {
-        return binService.updateBin(id, bin);
+    @PostMapping
+    public ResponseEntity<Bin> createBin(@Valid @RequestBody Bin bin) {
+        return ResponseEntity.ok(binService.createBin(bin));
     }
 
     @GetMapping("/{id}")
-    public Bin getBin(@PathVariable long id) {
-        return binService.getBinById(id);
+    public ResponseEntity<Bin> getBin(@PathVariable Long id) {
+        return ResponseEntity.ok(binService.getBinById(id));
     }
 
-    @GetMapping("/")
-    public List<Bin> getAllBins() {
-        return binService.getAllBins();
+    @GetMapping
+    public ResponseEntity<List<Bin>> getAllBins() {
+        return ResponseEntity.ok(binService.getAllBins());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Bin> updateBin(@PathVariable Long id, @Valid @RequestBody Bin bin) {
+        return ResponseEntity.ok(binService.updateBin(id, bin));
     }
 
     @PutMapping("/{id}/deactivate")
-    public void deactivate(@PathVariable long id) {
+    public ResponseEntity<Void> deactivateBin(@PathVariable Long id) {
         binService.deactivateBin(id);
+        return ResponseEntity.noContent().build();
     }
 }
