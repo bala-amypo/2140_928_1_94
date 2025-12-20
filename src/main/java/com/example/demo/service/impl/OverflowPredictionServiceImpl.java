@@ -1,49 +1,51 @@
-package com.example.demo.controller;
+package com.example.demo.service.impl;
 
-import com.example.demo.model.User;
-import com.example.demo.service.UserService;
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.model.Bin;
+import com.example.demo.model.OverflowPrediction;
+import com.example.demo.repository.BinRepository;
+import com.example.demo.repository.OverflowPredictionRepository;
+import com.example.demo.service.OverflowPredictionService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/users")
-public class UserController {
+@Service
+public class OverflowPredictionServiceImpl implements OverflowPredictionService {
 
-    private final UserService userService;
+    private final OverflowPredictionRepository predictionRepository;
+    private final BinRepository binRepository;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public OverflowPredictionServiceImpl(OverflowPredictionRepository predictionRepository, BinRepository binRepository) {
+        this.predictionRepository = predictionRepository;
+        this.binRepository = binRepository;
     }
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
+    @Override
+    public OverflowPrediction generatePrediction(Long binId) {
+        Bin bin = binRepository.findById(binId)
+                .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id " + binId));
+        OverflowPrediction prediction = new OverflowPrediction();
+        prediction.setBin(bin);
+        prediction.setPredictedFillLevel(0); // Placeholder logic
+        return predictionRepository.save(prediction);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+    @Override
+    public OverflowPrediction getPredictionById(Long id) {
+        return predictionRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Prediction not found with id " + id));
     }
 
-    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    @Override
+    public List<OverflowPrediction> getPredictionsForBin(Long binId) {
+        Bin bin = binRepository.findById(binId)
+                .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id " + binId));
+        return predictionRepository.findByBin(bin);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(
-            @PathVariable Long id,
-            @Valid @RequestBody User user
-    ) {
-        return ResponseEntity.ok(userService.updateUser(id, user));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
+    @Override
+    public List<OverflowPrediction> getLatestPredictionsForZone(Long zoneId) {
+        return predictionRepository.findLatestPredictionsForZone(zoneId);
     }
 }
