@@ -7,7 +7,6 @@ import com.example.demo.service.ZoneService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ZoneServiceImpl implements ZoneService {
@@ -24,8 +23,9 @@ public class ZoneServiceImpl implements ZoneService {
     }
 
     @Override
-    public Optional<Zone> getZoneById(Long id) {
-        return zoneRepository.findById(id);
+    public Zone getZoneById(Long id) {
+        return zoneRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Zone not found with id " + id));
     }
 
     @Override
@@ -35,21 +35,23 @@ public class ZoneServiceImpl implements ZoneService {
 
     @Override
     public Zone updateZone(Long id, Zone zone) {
-        Zone existingZone = zoneRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Zone not found with id: " + id));
-
-        existingZone.setName(zone.getName());
-        existingZone.setActive(zone.isActive());
-
-        return zoneRepository.save(existingZone);
+        Zone existing = getZoneById(id);
+        existing.setZoneName(zone.getZoneName());
+        existing.setDescription(zone.getDescription());
+        existing.setActive(zone.getActive());
+        return zoneRepository.save(existing);
     }
 
     @Override
     public Zone deactivateZone(Long id) {
-        Zone existingZone = zoneRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Zone not found with id: " + id));
+        Zone existing = getZoneById(id);
+        existing.setActive(false);
+        return zoneRepository.save(existing);
+    }
 
-        existingZone.setActive(false);
-        return zoneRepository.save(existingZone);
+    @Override
+    public Zone findByZoneName(String zoneName) {
+        return zoneRepository.findByZoneName(zoneName)
+                .orElseThrow(() -> new ResourceNotFoundException("Zone not found with name " + zoneName));
     }
 }

@@ -7,7 +7,6 @@ import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,15 +19,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        if(userRepository.existsByEmail(user.getEmail())) {
+        if (existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
         return userRepository.save(user);
     }
 
     @Override
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
     }
 
     @Override
@@ -38,21 +38,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(Long id, User user) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-
-        existingUser.setName(user.getName());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setActive(user.isActive());
-        return userRepository.save(existingUser);
+        User existing = getUserById(id);
+        existing.setFullName(user.getFullName());
+        existing.setEmail(user.getEmail());
+        existing.setPassword(user.getPassword());
+        existing.setRole(user.getRole());
+        return userRepository.save(existing);
     }
 
     @Override
-    public User deactivateUser(Long id) {
-        User existingUser = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+    public void deleteUser(Long id) {
+        User existing = getUserById(id);
+        userRepository.delete(existing);
+    }
 
-        existingUser.setActive(false);
-        return userRepository.save(existingUser);
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
     }
 }
