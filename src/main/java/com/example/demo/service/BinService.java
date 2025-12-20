@@ -8,5 +8,5 @@ public interface BinService {
     Bin getBinById(Long id);
     List<Bin> getAllBins();
     Bin updateBin(Long id, Bin bin);
-    void deactivateBin(Long id);
+    Bin deactivateBin(Long id);
 }
