@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Bin;
 import com.example.demo.service.BinService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,11 +13,8 @@ import java.util.List;
 @RequestMapping("/api/bins")
 public class BinController {
 
-    private final BinService binService;
-
-    public BinController(BinService binService) {
-        this.binService = binService;
-    }
+    @Autowired
+    private BinService binService;
 
     @PostMapping
     public ResponseEntity<Bin> createBin(@RequestBody Bin bin) {
@@ -24,9 +22,9 @@ public class BinController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Bin> getBinById(@PathVariable Long id) {
+    public ResponseEntity<Bin> getBin(@PathVariable Long id) {
         return ResponseEntity.ok(binService.getBinById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id: " + id)));
+                .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id " + id)));
     }
 
     @GetMapping
@@ -35,8 +33,8 @@ public class BinController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Bin> updateBin(@PathVariable Long id, @RequestBody Bin bin) {
-        return ResponseEntity.ok(binService.updateBin(id, bin));
+    public ResponseEntity<Bin> updateBin(@PathVariable Long id, @RequestBody Bin binDetails) {
+        return ResponseEntity.ok(binService.updateBin(id, binDetails));
     }
 
     @PutMapping("/{id}/deactivate")

@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.FillLevelRecord;
 import com.example.demo.service.FillLevelRecordService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,11 +13,8 @@ import java.util.List;
 @RequestMapping("/api/fill-records")
 public class FillLevelRecordController {
 
-    private final FillLevelRecordService recordService;
-
-    public FillLevelRecordController(FillLevelRecordService recordService) {
-        this.recordService = recordService;
-    }
+    @Autowired
+    private FillLevelRecordService recordService;
 
     @PostMapping
     public ResponseEntity<FillLevelRecord> createRecord(@RequestBody FillLevelRecord record) {
@@ -24,9 +22,9 @@ public class FillLevelRecordController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FillLevelRecord> getRecordById(@PathVariable Long id) {
+    public ResponseEntity<FillLevelRecord> getRecord(@PathVariable Long id) {
         return ResponseEntity.ok(recordService.getRecordById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Record not found with id: " + id)));
+                .orElseThrow(() -> new ResourceNotFoundException("Record not found with id " + id)));
     }
 
     @GetMapping("/bin/{binId}")
