@@ -2,11 +2,17 @@ package com.example.demo.service;
 
 import com.example.demo.model.User;
 
+import java.util.List;
+
 public interface UserService {
 
-    User save(User user);
+    User createUser(User user);
 
-    boolean exists(String email);
+    User getUserById(Long id);
 
-    User findByEmail(String email);
+    User getUserByEmail(String email);
+
+    List<User> getAllUsers();
+
+    void deleteUser(Long id);
 }
