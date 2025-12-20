@@ -7,7 +7,9 @@ import com.example.demo.repository.BinRepository;
 import com.example.demo.repository.UsagePatternModelRepository;
 import com.example.demo.service.UsagePatternModelService;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsagePatternModelServiceImpl implements UsagePatternModelService {
@@ -22,25 +24,25 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
 
     @Override
     public UsagePatternModel createModel(UsagePatternModel model) {
+        Bin bin = binRepository.findById(model.getBin().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id: " + model.getBin().getId()));
+        model.setBin(bin);
         return modelRepository.save(model);
     }
 
     @Override
     public UsagePatternModel updateModel(Long id, UsagePatternModel model) {
-        UsagePatternModel existing = modelRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("UsagePatternModel not found"));
-        existing.setAvgDailyIncreaseWeekday(model.getAvgDailyIncreaseWeekday());
-        existing.setAvgDailyIncreaseWeekend(model.getAvgDailyIncreaseWeekend());
-        existing.setLastUpdated(model.getLastUpdated());
-        return modelRepository.save(existing);
+        UsagePatternModel existingModel = modelRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Model not found with id: " + id));
+        existingModel.setPatternData(model.getPatternData());
+        return modelRepository.save(existingModel);
     }
 
     @Override
-    public UsagePatternModel getModelForBin(Long binId) {
+    public Optional<UsagePatternModel> getModelForBin(Long binId) {
         Bin bin = binRepository.findById(binId)
-                .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
-        return modelRepository.findByBin(bin)
-                .orElseThrow(() -> new ResourceNotFoundException("Model not found for this bin"));
+                .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id: " + binId));
+        return modelRepository.findByBin(bin);
     }
 
     @Override
