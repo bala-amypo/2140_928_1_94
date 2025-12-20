@@ -1,6 +1,5 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Zone;
 import com.example.demo.repository.ZoneRepository;
 import com.example.demo.service.ZoneService;
@@ -18,40 +17,33 @@ public class ZoneServiceImpl implements ZoneService {
     }
 
     @Override
-    public Zone createZone(Zone zone) {
+    public Zone create(Zone zone) {
         return zoneRepository.save(zone);
     }
 
     @Override
-    public Zone getZoneById(Long id) {
+    public Zone getById(Long id) {
         return zoneRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Zone not found with id " + id));
+                .orElseThrow(() -> new RuntimeException("Zone not found with id " + id));
     }
 
     @Override
-    public List<Zone> getAllZones() {
+    public List<Zone> getAll() {
         return zoneRepository.findAll();
     }
 
     @Override
-    public Zone updateZone(Long id, Zone zone) {
-        Zone existing = getZoneById(id);
-        existing.setZoneName(zone.getZoneName());
-        existing.setDescription(zone.getDescription());
-        existing.setActive(zone.getActive());
+    public Zone update(Long id, Zone zone) {
+        Zone existing = getById(id);
+        existing.setName(zone.getName());
+        existing.setActive(zone.isActive());
         return zoneRepository.save(existing);
     }
 
     @Override
-    public Zone deactivateZone(Long id) {
-        Zone existing = getZoneById(id);
-        existing.setActive(false);
-        return zoneRepository.save(existing);
-    }
-
-    @Override
-    public Zone findByZoneName(String zoneName) {
-        return zoneRepository.findByZoneName(zoneName)
-                .orElseThrow(() -> new ResourceNotFoundException("Zone not found with name " + zoneName));
+    public void deactivate(Long id) {
+        Zone zone = getById(id);
+        zone.setActive(false);
+        zoneRepository.save(zone);
     }
 }

@@ -1,5 +1,3 @@
-package com.example.demo.repository;
-
 import com.example.demo.model.Bin;
 import com.example.demo.model.FillLevelRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,5 +8,5 @@ public interface FillLevelRecordRepository extends JpaRepository<FillLevelRecord
 
     List<FillLevelRecord> findByBin(Bin bin);
 
-    List<FillLevelRecord> findTop5ByBinOrderByRecordedAtDesc(Bin bin);
+    List<FillLevelRecord> findTopByBinOrderByRecordedAtDesc(Bin bin, int limit);
 }

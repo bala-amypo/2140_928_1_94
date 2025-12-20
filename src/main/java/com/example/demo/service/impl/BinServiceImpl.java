@@ -1,6 +1,5 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Bin;
 import com.example.demo.repository.BinRepository;
 import com.example.demo.service.BinService;
@@ -18,38 +17,34 @@ public class BinServiceImpl implements BinService {
     }
 
     @Override
-    public Bin createBin(Bin bin) {
+    public Bin create(Bin bin) {
         return binRepository.save(bin);
     }
 
     @Override
-    public Bin getBinById(Long id) {
+    public Bin getById(Long id) {
         return binRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id " + id));
+                .orElseThrow(() -> new RuntimeException("Bin not found with id " + id));
     }
 
     @Override
-    public List<Bin> getAllBins() {
+    public List<Bin> getAll() {
         return binRepository.findAll();
     }
 
     @Override
-    public Bin updateBin(Long id, Bin bin) {
-        Bin existing = getBinById(id);
-        existing.setIdentifier(bin.getIdentifier());
-        existing.setLocationDescription(bin.getLocationDescription());
-        existing.setLatitude(bin.getLatitude());
-        existing.setLongitude(bin.getLongitude());
-        existing.setZone(bin.getZone());
-        existing.setCapacityLiters(bin.getCapacityLiters());
-        existing.setActive(bin.getActive());
+    public Bin update(Long id, Bin bin) {
+        Bin existing = getById(id);
+        existing.setLocation(bin.getLocation());
+        existing.setCapacity(bin.getCapacity());
+        existing.setActive(bin.isActive());
         return binRepository.save(existing);
     }
 
     @Override
-    public Bin deactivateBin(Long id) {
-        Bin existing = getBinById(id);
-        existing.setActive(false);
-        return binRepository.save(existing);
+    public void deactivate(Long id) {
+        Bin bin = getById(id);
+        bin.setActive(false);
+        binRepository.save(bin);
     }
 }
