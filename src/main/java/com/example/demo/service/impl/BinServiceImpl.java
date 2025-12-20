@@ -7,7 +7,6 @@ import com.example.demo.service.BinService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BinServiceImpl implements BinService {
@@ -24,8 +23,9 @@ public class BinServiceImpl implements BinService {
     }
 
     @Override
-    public Optional<Bin> getBinById(Long id) {
-        return binRepository.findById(id);
+    public Bin getBinById(Long id) {
+        return binRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id " + id));
     }
 
     @Override
@@ -35,23 +35,21 @@ public class BinServiceImpl implements BinService {
 
     @Override
     public Bin updateBin(Long id, Bin bin) {
-        Bin existingBin = binRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id: " + id));
-
-        existingBin.setName(bin.getName());
-        existingBin.setZone(bin.getZone());
-        existingBin.setCapacity(bin.getCapacity());
-        existingBin.setActive(bin.isActive());
-
-        return binRepository.save(existingBin);
+        Bin existing = getBinById(id);
+        existing.setIdentifier(bin.getIdentifier());
+        existing.setLocationDescription(bin.getLocationDescription());
+        existing.setLatitude(bin.getLatitude());
+        existing.setLongitude(bin.getLongitude());
+        existing.setZone(bin.getZone());
+        existing.setCapacityLiters(bin.getCapacityLiters());
+        existing.setActive(bin.getActive());
+        return binRepository.save(existing);
     }
 
     @Override
     public Bin deactivateBin(Long id) {
-        Bin existingBin = binRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id: " + id));
-
-        existingBin.setActive(false);
-        return binRepository.save(existingBin);
+        Bin existing = getBinById(id);
+        existing.setActive(false);
+        return binRepository.save(existing);
     }
 }
