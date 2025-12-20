@@ -18,28 +18,23 @@ public class BinServiceImpl implements BinService {
         this.binRepository = binRepository;
     }
 
-    @Override
     public Bin createBin(Bin bin) {
         bin.setActive(true);
         bin.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return binRepository.save(bin);
     }
 
-    @Override
     public Bin getBinById(Long id) {
         return binRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
     }
 
-    @Override
     public List<Bin> getAllBins() {
         return binRepository.findAll();
     }
 
-    @Override
     public Bin updateBin(Long id, Bin bin) {
         Bin existing = getBinById(id);
-
         existing.setIdentifier(bin.getIdentifier());
         existing.setLocationDescription(bin.getLocationDescription());
         existing.setLatitude(bin.getLatitude());
@@ -47,11 +42,9 @@ public class BinServiceImpl implements BinService {
         existing.setZone(bin.getZone());
         existing.setCapacityLiters(bin.getCapacityLiters());
         existing.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-
         return binRepository.save(existing);
     }
 
-    @Override
     public void deactivateBin(Long id) {
         Bin bin = getBinById(id);
         bin.setActive(false);
