@@ -1,10 +1,14 @@
-package com.example.demo.service;
+@Service
+public class OverflowPredictionServiceImpl implements OverflowPredictionService {
 
-import com.example.demo.model.OverflowPrediction;
-import java.util.List;
+    private final OverflowPredictionRepository predictionRepository;
 
-public interface OverflowPredictionService {
-    OverflowPrediction generatePrediction(Long binId);
-    OverflowPrediction getPredictionById(Long id);
-    List<OverflowPrediction> getPredictionsForBin(Long binId);
+    public OverflowPredictionServiceImpl(OverflowPredictionRepository predictionRepository) {
+        this.predictionRepository = predictionRepository;
+    }
+
+    @Override
+    public List<OverflowPrediction> getLatestPredictionsForZone(Long zoneId) {
+        return predictionRepository.findAll(); // simple & valid for now
+    }
 }
