@@ -1,28 +1,37 @@
 package com.example.demo.config;
 
-import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.Components;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class OpenApiConfig {
-    
+public class SwaggerConfig {
+
     @Bean
-    public OpenAPI customOpenAPI() {
+    public OpenAPI openAPI() {
         return new OpenAPI()
-            .info(new Info()
-                .title("Bin Overflow Predictor API")
-                .version("1.0")
-                .description("API for predicting trash bin overflow using historical data"))
-            .addSecurityItem(new SecurityRequirement().addList("bearer-jwt"))
-            .components(new Components()
-                .addSecuritySchemes("bearer-jwt", new SecurityScheme()
-                    .type(SecurityScheme.Type.HTTP)
-                    .scheme("bearer")
-                    .bearerFormat("JWT")));
+                .info(new Info()
+                        .title("Smart Waste Management API")
+                        .version("1.0")
+                        .description("API documentation for Smart Waste Management System")
+                )
+                .addSecurityItem(
+                        new SecurityRequirement().addList("bearerAuth")
+                )
+                .components(
+                        new Components()
+                                .addSecuritySchemes(
+                                        "bearerAuth",
+                                        new SecurityScheme()
+                                                .name("bearerAuth")
+                                                .type(SecurityScheme.Type.HTTP)
+                                                .scheme("bearer")
+                                                .bearerFormat("JWT")
+                                )
+                );
     }
 }
