@@ -1,12 +1,13 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -19,16 +20,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
-        if(userRepository.existsByEmail(user.getEmail())) {
-            throw new BadRequestException("Email already exists");
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("Email already exists: " + user.getEmail());
         }
         return userRepository.save(user);
     }
 
     @Override
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
     }
 
     @Override
@@ -38,17 +38,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(Long id, User user) {
-        User existing = getUserById(id);
-        existing.setFullName(user.getFullName());
+        User existing = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        existing.setName(user.getName());
         existing.setEmail(user.getEmail());
         existing.setPassword(user.getPassword());
-        existing.setRole(user.getRole());
         return userRepository.save(existing);
     }
 
     @Override
-    public void deleteUser(Long id) {
-        User existing = getUserById(id);
-        userRepository.delete(existing);
+    public User deactivateUser(Long id) {
+        User existing = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+        existing.setActive(false);
+        return userRepository.save(existing);
     }
 }

@@ -18,39 +18,29 @@ public class UserController {
         this.userService = userService;
     }
 
-    // CREATE
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        User created = userService.createUser(user);
-        return ResponseEntity.ok(created);
+        return ResponseEntity.ok(userService.createUser(user));
     }
 
-    // READ ALL
-    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
-    }
-
-    // READ BY ID
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userService.getUserById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id)));
     }
 
-    // UPDATE
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
-        User updated = userService.updateUser(id, user);
-        return ResponseEntity.ok(updated);
+        return ResponseEntity.ok(userService.updateUser(id, user));
     }
 
-    // DELETE (Soft delete / deactivate)
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<User> deactivateUser(@PathVariable Long id) {
-        User deactivated = userService.deactivateUser(id);
-        return ResponseEntity.ok(deactivated);
+        return ResponseEntity.ok(userService.deactivateUser(id));
     }
 }
