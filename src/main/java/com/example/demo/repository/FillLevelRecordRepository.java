@@ -1,10 +1,15 @@
-package com.example.demo.repository;
+package com.example.demo.service;
 
 import com.example.demo.model.FillLevelRecord;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
 
-public interface FillLevelRecordRepository extends JpaRepository<FillLevelRecord, Long> {
-    List<FillLevelRecord> findByBinId(Long binId);
+public interface FillLevelRecordService {
+
+    FillLevelRecord createRecord(FillLevelRecord record);
+
+    FillLevelRecord getRecordById(Long id);
+
+    List<FillLevelRecord> getRecordsForBin(Long binId);
+
+    List<FillLevelRecord> getRecentRecords(Long binId, int limit);
 }
