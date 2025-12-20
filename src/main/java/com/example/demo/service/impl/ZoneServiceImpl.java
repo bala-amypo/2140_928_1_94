@@ -24,7 +24,7 @@ public class ZoneServiceImpl implements ZoneService {
     @Override
     public Zone getById(Long id) {
         return zoneRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Zone not found with id " + id));
+                .orElseThrow(() -> new RuntimeException("Zone not found"));
     }
 
     @Override
@@ -34,16 +34,12 @@ public class ZoneServiceImpl implements ZoneService {
 
     @Override
     public Zone update(Long id, Zone zone) {
-        Zone existing = getById(id);
-        existing.setName(zone.getName());
-        existing.setActive(zone.isActive());
-        return zoneRepository.save(existing);
+        getById(id);
+        return zoneRepository.save(zone);
     }
 
     @Override
     public void deactivate(Long id) {
-        Zone zone = getById(id);
-        zone.setActive(false);
-        zoneRepository.save(zone);
+        // No active flag in model → intentionally empty
     }
 }
