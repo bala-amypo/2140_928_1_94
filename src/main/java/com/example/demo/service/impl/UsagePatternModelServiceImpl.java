@@ -1,11 +1,13 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
-import com.example.demo.model.UsagePatternModel;
-import java.util.List;
+import com.example.demo.service.UsagePatternModelService;
+import org.springframework.stereotype.Service;
 
-public interface UsagePatternModelService {
-    UsagePatternModel createModel(UsagePatternModel model);
-    UsagePatternModel updateModel(Long id, UsagePatternModel model);
-    UsagePatternModel getModelForBin(Long binId);
-    List<UsagePatternModel> getAllModels();
+@Service
+public class UsagePatternModelServiceImpl implements UsagePatternModelService {
+
+    @Override
+    public void trainModel() {
+        // stub implementation
+    }
 }

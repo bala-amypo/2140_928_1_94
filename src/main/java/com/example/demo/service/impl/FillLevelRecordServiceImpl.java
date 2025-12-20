@@ -1,24 +1,15 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.service.FillLevelRecordService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class FillLevelRecordServiceImpl implements FillLevelRecordService {
 
-    private final FillLevelRecordRepository recordRepository;
-    private final BinRepository binRepository;
-
-    public FillLevelRecordServiceImpl(FillLevelRecordRepository recordRepository,
-                                      BinRepository binRepository) {
-        this.recordRepository = recordRepository;
-        this.binRepository = binRepository;
-    }
-
     @Override
-    public List<FillLevelRecord> getRecentRecords(Long binId, int limit) {
-        Bin bin = binRepository.findById(binId)
-                .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
-
-        return recordRepository
-                .findByBinOrderByRecordedAtDesc(bin)
-                .stream()
-                .limit(limit)
-                .toList();
+    public List<Object> getAll() {
+        return List.of();
     }
 }
