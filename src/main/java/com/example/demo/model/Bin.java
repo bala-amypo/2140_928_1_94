@@ -1,68 +1,63 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Entity
+@Table(name = "bins")
 public class Bin {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank(message = "Identifier is required")
+    
+    @Column(unique = true)
     private String identifier;
-
-    @NotBlank(message = "Location description is required")
     private String locationDescription;
-
-    @NotNull(message = "Latitude is required")
     private Double latitude;
-
-    @NotNull(message = "Longitude is required")
     private Double longitude;
-
+    
     @ManyToOne
-    @JoinColumn(name = "zone_id", nullable = false)
+    @JoinColumn(name = "zone_id")
     private Zone zone;
-
-    @Min(value = 1, message = "Bin capacity must be greater than 0")
-    private Integer capacityLiters;
-
-    private Boolean active = true;
-
-    private LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime updatedAt = LocalDateTime.now();
-
-    // ------------------ Getters and Setters ------------------
+    
+    private Double capacityLiters;
+    private Boolean active;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
+    
+    public Bin() {}
+    
+    public Bin(String identifier, String locationDescription, Double latitude, Double longitude, 
+               Zone zone, Double capacityLiters, Boolean active, Timestamp createdAt, Timestamp updatedAt) {
+        this.identifier = identifier;
+        this.locationDescription = locationDescription;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.zone = zone;
+        this.capacityLiters = capacityLiters;
+        this.active = active;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+    
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
     public String getIdentifier() { return identifier; }
     public void setIdentifier(String identifier) { this.identifier = identifier; }
-
     public String getLocationDescription() { return locationDescription; }
     public void setLocationDescription(String locationDescription) { this.locationDescription = locationDescription; }
-
     public Double getLatitude() { return latitude; }
     public void setLatitude(Double latitude) { this.latitude = latitude; }
-
     public Double getLongitude() { return longitude; }
     public void setLongitude(Double longitude) { this.longitude = longitude; }
-
     public Zone getZone() { return zone; }
     public void setZone(Zone zone) { this.zone = zone; }
-
-    public Integer getCapacityLiters() { return capacityLiters; }
-    public void setCapacityLiters(Integer capacityLiters) { this.capacityLiters = capacityLiters; }
-
+    public Double getCapacityLiters() { return capacityLiters; }
+    public void setCapacityLiters(Double capacityLiters) { this.capacityLiters = capacityLiters; }
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
-
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public Timestamp getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+    public Timestamp getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(Timestamp updatedAt) { this.updatedAt = updatedAt; }
 }
