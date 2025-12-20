@@ -2,37 +2,36 @@ package com.example.demo.controller;
 
 import com.example.demo.model.OverflowPrediction;
 import com.example.demo.service.OverflowPredictionService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/predictions")
 public class OverflowPredictionController {
-
-    private final OverflowPredictionService service;
-
-    public OverflowPredictionController(OverflowPredictionService service) {
-        this.service = service;
+    private final OverflowPredictionService predictionService;
+    
+    public OverflowPredictionController(OverflowPredictionService predictionService) {
+        this.predictionService = predictionService;
     }
-
+    
     @PostMapping("/generate/{binId}")
-    public OverflowPrediction generatePrediction(@PathVariable long binId) {
-        return service.generatePrediction(binId);
+    public ResponseEntity<OverflowPrediction> generatePrediction(@PathVariable Long binId) {
+        return ResponseEntity.ok(predictionService.generatePrediction(binId));
     }
-
+    
     @GetMapping("/{id}")
-    public OverflowPrediction getPrediction(@PathVariable long id) {
-        return service.getPredictionById(id);
+    public ResponseEntity<OverflowPrediction> getPrediction(@PathVariable Long id) {
+        return ResponseEntity.ok(predictionService.getPredictionById(id));
     }
-
+    
     @GetMapping("/bin/{binId}")
-    public List<OverflowPrediction> getPredictionsForBin(@PathVariable long binId) {
-        return service.getPredictionsForBin(binId);
+    public ResponseEntity<List<OverflowPrediction>> getPredictionsForBin(@PathVariable Long binId) {
+        return ResponseEntity.ok(predictionService.getPredictionsForBin(binId));
     }
-
+    
     @GetMapping("/zone/{zoneId}/latest")
-    public List<OverflowPrediction> getLatestPredictionsForZone(@PathVariable long zoneId) {
-        return service.getLatestPredictionsForZone(zoneId);
+    public ResponseEntity<List<OverflowPrediction>> getLatestPredictionsForZone(@PathVariable Long zoneId) {
+        return ResponseEntity.ok(predictionService.getLatestPredictionsForZone(zoneId));
     }
 }
