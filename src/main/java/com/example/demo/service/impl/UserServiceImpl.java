@@ -5,8 +5,6 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -17,23 +15,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(User user) {
+    public User save(User user) {
         return userRepository.save(user);
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public boolean exists(String email) {
+        return userRepository.existsByEmail(email);
     }
 
     @Override
-    public User getUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-    }
-
-    @Override
-    public boolean exists(String username) {
-        return userRepository.existsByUsername(username);
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }
