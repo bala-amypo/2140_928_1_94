@@ -45,6 +45,6 @@ public class FillLevelRecordServiceImpl implements FillLevelRecordService {
     public List<FillLevelRecord> getRecent(Long binId, int limit) {
         Bin bin = binRepository.findById(binId)
                 .orElseThrow(() -> new RuntimeException("Bin not found with id " + binId));
-        return recordRepository.findTopByBinOrderByRecordedAtDesc(bin, limit);
+        return recordRepository.findAll();
     }
 }
