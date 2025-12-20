@@ -1,13 +1,18 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Zone;
+
 import java.util.List;
 
 public interface ZoneService {
-    Zone createZone(Zone zone);
-    Zone getZoneById(Long id);
-    List<Zone> getAllZones();
-    Zone updateZone(Long id, Zone zone);
-    Zone deactivateZone(Long id);
-    Zone findByZoneName(String zoneName);
+
+    Zone create(Zone zone);
+
+    Zone getById(Long id);
+
+    List<Zone> getAll();
+
+    Zone update(Long id, Zone zone);
+
+    void deactivate(Long id);
 }
