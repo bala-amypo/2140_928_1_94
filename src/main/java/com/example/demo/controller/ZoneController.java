@@ -1,9 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Zone;
 import com.example.demo.service.ZoneService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,32 +11,35 @@ import java.util.List;
 @RequestMapping("/api/zones")
 public class ZoneController {
 
-    @Autowired
-    private ZoneService zoneService;
+    private final ZoneService zoneService;
+
+    public ZoneController(ZoneService zoneService) {
+        this.zoneService = zoneService;
+    }
 
     @PostMapping
-    public ResponseEntity<Zone> createZone(@RequestBody Zone zone) {
-        return ResponseEntity.ok(zoneService.createZone(zone));
+    public ResponseEntity<Zone> create(@RequestBody Zone zone) {
+        return ResponseEntity.ok(zoneService.create(zone));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Zone> getZone(@PathVariable Long id) {
-        return ResponseEntity.ok(zoneService.getZoneById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Zone not found with id " + id)));
+    public ResponseEntity<Zone> get(@PathVariable Long id) {
+        return ResponseEntity.ok(zoneService.getById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Zone>> getAllZones() {
-        return ResponseEntity.ok(zoneService.getAllZones());
+    public ResponseEntity<List<Zone>> getAll() {
+        return ResponseEntity.ok(zoneService.getAll());
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Zone> updateZone(@PathVariable Long id, @RequestBody Zone zoneDetails) {
-        return ResponseEntity.ok(zoneService.updateZone(id, zoneDetails));
+    public ResponseEntity<Zone> update(@PathVariable Long id, @RequestBody Zone zone) {
+        return ResponseEntity.ok(zoneService.update(id, zone));
     }
 
     @PutMapping("/{id}/deactivate")
-    public ResponseEntity<Zone> deactivateZone(@PathVariable Long id) {
-        return ResponseEntity.ok(zoneService.deactivateZone(id));
+    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+        zoneService.deactivate(id);
+        return ResponseEntity.noContent().build();
     }
 }

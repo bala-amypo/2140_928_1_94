@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.OverflowPrediction;
 import com.example.demo.service.OverflowPredictionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +12,11 @@ import java.util.List;
 @RequestMapping("/api/predictions")
 public class OverflowPredictionController {
 
-    @Autowired
-    private OverflowPredictionService predictionService;
+    private final OverflowPredictionService predictionService;
+
+    public OverflowPredictionController(OverflowPredictionService predictionService) {
+        this.predictionService = predictionService;
+    }
 
     @PostMapping("/generate/{binId}")
     public ResponseEntity<OverflowPrediction> generatePrediction(@PathVariable Long binId) {
@@ -22,7 +25,8 @@ public class OverflowPredictionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<OverflowPrediction> getPredictionById(@PathVariable Long id) {
-        return ResponseEntity.ok(predictionService.getPredictionById(id));
+        return ResponseEntity.ok(predictionService.getPredictionById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Prediction not found with id: " + id)));
     }
 
     @GetMapping("/bin/{binId}")
