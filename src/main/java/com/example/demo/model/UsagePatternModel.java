@@ -10,17 +10,47 @@ public class UsagePatternModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String modelData;
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "bin_id")
     private Bin bin;
 
-    public Long getId() { return id; }
+    private Double averageDailyUsage;
+    private Double peakUsage;
+    private String patternType;
 
-    public String getModelData() { return modelData; }
-    public void setModelData(String modelData) { this.modelData = modelData; }
+    public Long getId() {
+        return id;
+    }
 
-    public Bin getBin() { return bin; }
-    public void setBin(Bin bin) { this.bin = bin; }
+    public Bin getBin() {
+        return bin;
+    }
+
+    public void setBin(Bin bin) {
+        this.bin = bin;
+    }
+
+    public Double getAverageDailyUsage() {
+        return averageDailyUsage;
+    }
+
+    public void setAverageDailyUsage(Double averageDailyUsage) {
+        this.averageDailyUsage = averageDailyUsage;
+    }
+
+    public Double getPeakUsage() {
+        return peakUsage;
+    }
+
+    public void setPeakUsage(Double peakUsage) {
+        this.peakUsage = peakUsage;
+    }
+
+    public String getPatternType() {
+        return patternType;
+    }
+
+    public void setPatternType(String patternType) {
+        this.patternType = patternType;
+    }
 }
