@@ -19,18 +19,17 @@ public class UsagePatternModel {
 
     @NotNull(message = "Average daily usage is required")
     @Min(value = 0, message = "Average daily usage must be >= 0")
-    @Column(nullable = false)
+    @Column(name = "average_daily_usage", nullable = false)
     private Double averageDailyUsage;
 
     @NotNull(message = "Peak usage is required")
     @Min(value = 0, message = "Peak usage must be >= 0")
-    @Column(nullable = false)
+    @Column(name = "peak_usage", nullable = false)
     private Double peakUsage;
 
     @NotNull(message = "Pattern type is required")
-    @Enumerated(EnumType.STRING)
-    @Column(name = "pattern_type", nullable = false)
-    private PatternType patternType;
+    @Column(name = "pattern_type", nullable = false, length = 20)
+    private String patternType;
 
     // ===== GETTERS & SETTERS =====
 
@@ -62,11 +61,11 @@ public class UsagePatternModel {
         this.peakUsage = peakUsage;
     }
 
-    public PatternType getPatternType() {
+    public String getPatternType() {
         return patternType;
     }
 
-    public void setPatternType(PatternType patternType) {
+    public void setPatternType(String patternType) {
         this.patternType = patternType;
     }
 }
