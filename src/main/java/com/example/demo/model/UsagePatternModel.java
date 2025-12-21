@@ -1,6 +1,8 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "usage_pattern_models")
@@ -10,13 +12,23 @@ public class UsagePatternModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Bin must not be null")
     @ManyToOne(optional = false)
-    @JoinColumn(name = "bin_id")
+    @JoinColumn(name = "bin_id", nullable = false)
     private Bin bin;
 
+    @NotNull(message = "Average daily usage is required")
+    @Min(value = 0, message = "Average daily usage must be >= 0")
     private Double averageDailyUsage;
+
+    @NotNull(message = "Peak usage is required")
+    @Min(value = 0, message = "Peak usage must be >= 0")
     private Double peakUsage;
+
+    @NotNull(message = "Pattern type is required")
     private String patternType;
+
+    // Getters and Setters
 
     public Long getId() {
         return id;
