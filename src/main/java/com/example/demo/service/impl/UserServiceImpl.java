@@ -1,6 +1,5 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.ResourceAlreadyExistsException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -20,10 +19,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(User user) {
-        // Check if email already exists
-        userRepository.findByEmail(user.getEmail()).ifPresent(u -> {
-            throw new ResourceAlreadyExistsException("User with email " + user.getEmail() + " already exists");
-        });
+        // Simply save the user; no custom exception for duplicates
         return userRepository.save(user);
     }
 
