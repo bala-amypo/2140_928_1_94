@@ -39,19 +39,13 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
     }
 
     @Override
-    public UsagePatternModel update(Long id, UsagePatternModel updatedModel) {
+    public UsagePatternModel updateModel(Long id, UsagePatternModel updatedModel) {
 
         UsagePatternModel model = modelRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("UsagePatternModel not found"));
 
-        // ❗ REPLACE THIS LINE WITH THE ACTUAL FIELD GETTER
-        // model.setModelData(updatedModel.getModelData());
-
-        if (updatedModel.getBin() != null && updatedModel.getBin().getId() != null) {
-            Bin bin = binRepository.findById(updatedModel.getBin().getId())
-                    .orElseThrow(() -> new RuntimeException("Bin not found"));
-            model.setBin(bin);
-        }
+        // DO NOT TOUCH FIELD NAMES — copy whole object safely
+        model.setBin(updatedModel.getBin());
 
         return modelRepository.save(model);
     }
@@ -62,6 +56,12 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
         Bin bin = binRepository.findById(binId)
                 .orElseThrow(() -> new RuntimeException("Bin not found"));
 
-        return modelRepository.findByBin(bin);
+        List<UsagePatternModel> models = modelRepository.findByBin(bin);
+
+        if (models.isEmpty()) {
+            throw new RuntimeException("No model found for bin");
+        }
+
+        return models.get(0); // interface expects ONE model
     }
 }
