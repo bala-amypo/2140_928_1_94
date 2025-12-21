@@ -15,14 +15,17 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
     private final UsagePatternModelRepository modelRepository;
     private final BinRepository binRepository;
 
-    public UsagePatternModelServiceImpl(UsagePatternModelRepository modelRepository,
-                                        BinRepository binRepository) {
+    public UsagePatternModelServiceImpl(
+            UsagePatternModelRepository modelRepository,
+            BinRepository binRepository
+    ) {
         this.modelRepository = modelRepository;
         this.binRepository = binRepository;
     }
 
+    // ✅ matches: createModel(...)
     @Override
-    public UsagePatternModel create(UsagePatternModel model) {
+    public UsagePatternModel createModel(UsagePatternModel model) {
 
         if (model.getBin() != null && model.getBin().getId() != null) {
             Bin bin = binRepository.findById(model.getBin().getId())
@@ -33,23 +36,29 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
         return modelRepository.save(model);
     }
 
+    // ✅ matches: getAllModels()
     @Override
     public List<UsagePatternModel> getAllModels() {
         return modelRepository.findAll();
     }
 
+    // ✅ matches: updateModel(...)
     @Override
     public UsagePatternModel updateModel(Long id, UsagePatternModel updatedModel) {
 
-        UsagePatternModel model = modelRepository.findById(id)
+        UsagePatternModel existing = modelRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("UsagePatternModel not found"));
 
-        // DO NOT TOUCH FIELD NAMES — copy whole object safely
-        model.setBin(updatedModel.getBin());
+        if (updatedModel.getBin() != null && updatedModel.getBin().getId() != null) {
+            Bin bin = binRepository.findById(updatedModel.getBin().getId())
+                    .orElseThrow(() -> new RuntimeException("Bin not found"));
+            existing.setBin(bin);
+        }
 
-        return modelRepository.save(model);
+        return modelRepository.save(existing);
     }
 
+    // ✅ matches: getModelForBin(...)
     @Override
     public UsagePatternModel getModelForBin(Long binId) {
 
@@ -59,9 +68,9 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
         List<UsagePatternModel> models = modelRepository.findByBin(bin);
 
         if (models.isEmpty()) {
-            throw new RuntimeException("No model found for bin");
+            throw new RuntimeException("No UsagePatternModel found for bin");
         }
 
-        return models.get(0); // interface expects ONE model
+        return models.get(0);
     }
 }
