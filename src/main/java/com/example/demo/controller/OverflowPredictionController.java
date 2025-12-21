@@ -32,8 +32,6 @@ public class OverflowPredictionController {
         return ResponseEntity.ok(service.getAll());
     }
 
-    // New endpoints to match the question requirements
-
     @PostMapping("/generate/{binId}")
     public ResponseEntity<OverflowPrediction> generate(@PathVariable Long binId) {
         return ResponseEntity.ok(service.generatePrediction(binId));

@@ -43,7 +43,6 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
         Bin bin = binRepository.findById(binId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id: " + binId));
 
-        // Example logic: create a new prediction based on bin
         OverflowPrediction prediction = new OverflowPrediction();
         prediction.setBin(bin);
         prediction.setPredictedLevel(0.0); // Replace with actual prediction logic

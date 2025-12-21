@@ -4,37 +4,31 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "overflow_predictions")
 public class OverflowPrediction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int predictedFillLevel;
+    @ManyToOne
+    @JoinColumn(name = "bin_id", nullable = false)
+    private Bin bin;
+
+    private Double predictedLevel;
 
     private LocalDateTime predictedAt;
 
-    @ManyToOne
-    private Bin bin;
+    public OverflowPrediction() {
+        this.predictedAt = LocalDateTime.now();
+    }
 
     public Long getId() {
         return id;
     }
 
-    public int getPredictedFillLevel() {
-        return predictedFillLevel;
-    }
-
-    public void setPredictedFillLevel(int predictedFillLevel) {
-        this.predictedFillLevel = predictedFillLevel;
-    }
-
-    public LocalDateTime getPredictedAt() {
-        return predictedAt;
-    }
-
-    public void setPredictedAt(LocalDateTime predictedAt) {
-        this.predictedAt = predictedAt;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Bin getBin() {
@@ -43,5 +37,21 @@ public class OverflowPrediction {
 
     public void setBin(Bin bin) {
         this.bin = bin;
+    }
+
+    public Double getPredictedLevel() {
+        return predictedLevel;
+    }
+
+    public void setPredictedLevel(Double predictedLevel) {
+        this.predictedLevel = predictedLevel;
+    }
+
+    public LocalDateTime getPredictedAt() {
+        return predictedAt;
+    }
+
+    public void setPredictedAt(LocalDateTime predictedAt) {
+        this.predictedAt = predictedAt;
     }
 }
