@@ -1,3 +1,12 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.model.Zone;
+import com.example.demo.repository.ZoneRepository;
+import com.example.demo.service.ZoneService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class ZoneServiceImpl implements ZoneService {
 
@@ -7,11 +16,13 @@ public class ZoneServiceImpl implements ZoneService {
         this.zoneRepository = zoneRepository;
     }
 
+    // ✅ FIX 1: force persist, never merge
     @Override
     public Zone create(Zone zone) {
-        // 🔥 CRITICAL FIX
-        zone.setId(null);          // force INSERT
-        zone.setActive(true);      // safe default
+        zone.setId(null);          // CRITICAL
+        if (zone.getActive() == null) {
+            zone.setActive(true);  // safe default
+        }
         return zoneRepository.save(zone);
     }
 
@@ -26,17 +37,19 @@ public class ZoneServiceImpl implements ZoneService {
         return zoneRepository.findAll();
     }
 
+    // ✅ FIX 2: update managed entity ONLY
     @Override
     public Zone update(Long id, Zone zone) {
         Zone existing = getById(id);
 
         existing.setZoneName(zone.getZoneName());
         existing.setDescription(zone.getDescription());
-        existing.setActive(zone.isActive());
+        existing.setActive(zone.getActive());
 
         return zoneRepository.save(existing);
     }
 
+    // ✅ FIX 3: deactivate actually works
     @Override
     public void deactivate(Long id) {
         Zone zone = getById(id);
