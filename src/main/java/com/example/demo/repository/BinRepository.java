@@ -1,19 +1,11 @@
-@Override
-public Bin update(Long id, Bin updatedBin) {
-    Bin existing = getById(id);
+package com.example.demo.repository;
 
-    existing.setIdentifier(updatedBin.getIdentifier());
-    existing.setLocationDescription(updatedBin.getLocationDescription());
-    existing.setLatitude(updatedBin.getLatitude());
-    existing.setLongitude(updatedBin.getLongitude());
-    existing.setCapacityLiters(updatedBin.getCapacityLiters());
-    existing.setActive(updatedBin.getActive());
+import com.example.demo.model.Bin;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-    if (updatedBin.getZone() != null) {
-        Zone zone = zoneRepository.findById(updatedBin.getZone().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Zone not found"));
-        existing.setZone(zone);
-    }
+import java.util.Optional;
 
-    return binRepository.save(existing);
+public interface BinRepository extends JpaRepository<Bin, Long> {
+
+    Optional<Bin> findByIdentifier(String identifier);
 }

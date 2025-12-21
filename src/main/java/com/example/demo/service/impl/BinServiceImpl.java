@@ -1,13 +1,11 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.model.Bin;
-import com.example.demo..Zone;
+import com.example.demo.model.Zone;
 import com.example.demo.repository.BinRepository;
 import com.example.demo.repository.ZoneRepository;
 import com.example.demo.service.BinService;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -17,62 +15,53 @@ public class BinServiceImpl implements BinService {
     private final BinRepository binRepository;
     private final ZoneRepository zoneRepository;
 
-    public BinServiceImpl(BinRepository binRepository, ZoneRepository zoneRepository) {
+    public BinServiceImpl(BinRepository binRepository,
+                          ZoneRepository zoneRepository) {
         this.binRepository = binRepository;
         this.zoneRepository = zoneRepository;
     }
 
     @Override
     public Bin create(Bin bin) {
-
-        if (bin.getIdentifier() == null || bin.getIdentifier().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Identifier is required");
+        if (bin.getIdentifier() != null &&
+                binRepository.findByIdentifier(bin.getIdentifier()).isPresent()) {
+            throw new RuntimeException("Bin identifier already exists");
         }
 
-        if (binRepository.existsByIdentifier(bin.getIdentifier())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bin identifier already exists");
+        if (bin.getZone() != null && bin.getZone().getId() != null) {
+            Zone zone = zoneRepository.findById(bin.getZone().getId())
+                    .orElseThrow(() -> new RuntimeException("Zone not found"));
+            bin.setZone(zone);
         }
-
-        if (bin.getZone() == null || bin.getZone().getId() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Zone id is required");
-        }
-
-        Zone zone = zoneRepository.findById(bin.getZone().getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Zone not found with id " + bin.getZone().getId()));
-
-        bin.setZone(zone);
-        bin.setActive(bin.getActive() != null ? bin.getActive() : true);
 
         return binRepository.save(bin);
     }
 
     @Override
-    public Bin update(Long id, Bin bin) {
-        Bin existing = getById(id);
+    public Bin update(Long id, Bin updatedBin) {
+        Bin bin = binRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Bin not found"));
 
-        existing.setIdentifier(bin.getIdentifier());
-        existing.setLocationDescription(bin.getLocationDescription());
-        existing.setLatitude(bin.getLatitude());
-        existing.setLongitude(bin.getLongitude());
-        existing.setCapacityLiters(bin.getCapacityLiters());
-        existing.setActive(bin.getActive());
+        bin.setIdentifier(updatedBin.getIdentifier());
+        bin.setLocationDescription(updatedBin.getLocationDescription());
+        bin.setLatitude(updatedBin.getLatitude());
+        bin.setLongitude(updatedBin.getLongitude());
+        bin.setCapacityLiters(updatedBin.getCapacityLiters());
+        bin.setActive(updatedBin.getActive());
 
-        if (bin.getZone() != null && bin.getZone().getId() != null) {
-            Zone zone = zoneRepository.findById(bin.getZone().getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Zone not found with id " + bin.getZone().getId()));
-            existing.setZone(zone);
+        if (updatedBin.getZone() != null && updatedBin.getZone().getId() != null) {
+            Zone zone = zoneRepository.findById(updatedBin.getZone().getId())
+                    .orElseThrow(() -> new RuntimeException("Zone not found"));
+            bin.setZone(zone);
         }
 
-        return binRepository.save(existing);
+        return binRepository.save(bin);
     }
 
     @Override
     public Bin getById(Long id) {
         return binRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Bin not found with id " + id));
+                .orElseThrow(() -> new RuntimeException("Bin not found"));
     }
 
     @Override
