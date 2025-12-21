@@ -5,6 +5,7 @@ import com.example.demo.service.UsagePatternModelService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -19,24 +20,24 @@ public class UsagePatternModelController {
 
     @PostMapping
     public ResponseEntity<UsagePatternModel> createModel(@RequestBody UsagePatternModel model) {
-        UsagePatternModel saved = modelService.create(model);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+        UsagePatternModel savedModel = modelService.create(model);
+        return new ResponseEntity<>(savedModel, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<UsagePatternModel> updateModel(@PathVariable Long id,
                                                          @RequestBody UsagePatternModel model) {
-        UsagePatternModel updated = modelService.update(id, model);
-        return new ResponseEntity<>(updated, HttpStatus.OK);
+        UsagePatternModel updatedModel = modelService.update(id, model);
+        return ResponseEntity.ok(updatedModel);
     }
 
     @GetMapping
     public ResponseEntity<List<UsagePatternModel>> getAllModels() {
-        return new ResponseEntity<>(modelService.getAll(), HttpStatus.OK);
+        return ResponseEntity.ok(modelService.getAll());
     }
 
     @GetMapping("/bin/{binId}")
     public ResponseEntity<List<UsagePatternModel>> getModelsByBin(@PathVariable Long binId) {
-        return new ResponseEntity<>(modelService.getByBinId(binId), HttpStatus.OK);
+        return ResponseEntity.ok(modelService.getByBinId(binId));
     }
 }

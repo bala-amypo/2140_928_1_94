@@ -6,6 +6,7 @@ import com.example.demo.repository.BinRepository;
 import com.example.demo.repository.UsagePatternModelRepository;
 import com.example.demo.service.UsagePatternModelService;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -22,13 +23,14 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
 
     @Override
     public UsagePatternModel create(UsagePatternModel model) {
-        if (model.getBin() != null && model.getBin().getId() != null) {
-            Bin bin = binRepository.findById(model.getBin().getId())
-                    .orElseThrow(() -> new RuntimeException("Bin not found"));
-            model.setBin(bin);
-        } else {
+        if (model.getBin() == null || model.getBin().getId() == null) {
             throw new RuntimeException("Bin is required");
         }
+
+        Bin bin = binRepository.findById(model.getBin().getId())
+                .orElseThrow(() -> new RuntimeException("Bin not found"));
+        model.setBin(bin);
+
         return modelRepository.save(model);
     }
 
@@ -59,6 +61,7 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
     public List<UsagePatternModel> getByBinId(Long binId) {
         Bin bin = binRepository.findById(binId)
                 .orElseThrow(() -> new RuntimeException("Bin not found"));
+
         return modelRepository.findByBin(bin);
     }
 }
