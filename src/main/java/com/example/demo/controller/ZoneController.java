@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Zone;
 import com.example.demo.service.ZoneService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ public class ZoneController {
     }
 
     @PostMapping
-    public ResponseEntity<Zone> create(@RequestBody Zone zone) {
+    public ResponseEntity<Zone> create(@Valid @RequestBody Zone zone) {
         return ResponseEntity.ok(zoneService.create(zone));
     }
 
@@ -33,7 +34,10 @@ public class ZoneController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Zone> update(@PathVariable Long id, @RequestBody Zone zone) {
+    public ResponseEntity<Zone> update(
+            @PathVariable Long id,
+            @Valid @RequestBody Zone zone) {
+
         return ResponseEntity.ok(zoneService.update(id, zone));
     }
 
