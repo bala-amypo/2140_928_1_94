@@ -13,22 +13,26 @@ public class UsagePatternModel {
     private Long id;
 
     @NotNull(message = "Bin must not be null")
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "bin_id", nullable = false)
     private Bin bin;
 
     @NotNull(message = "Average daily usage is required")
     @Min(value = 0, message = "Average daily usage must be >= 0")
+    @Column(nullable = false)
     private Double averageDailyUsage;
 
     @NotNull(message = "Peak usage is required")
     @Min(value = 0, message = "Peak usage must be >= 0")
+    @Column(nullable = false)
     private Double peakUsage;
 
     @NotNull(message = "Pattern type is required")
-    private String patternType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "pattern_type", nullable = false)
+    private PatternType patternType;
 
-    // Getters and Setters
+    // ===== GETTERS & SETTERS =====
 
     public Long getId() {
         return id;
@@ -58,11 +62,11 @@ public class UsagePatternModel {
         this.peakUsage = peakUsage;
     }
 
-    public String getPatternType() {
+    public PatternType getPatternType() {
         return patternType;
     }
 
-    public void setPatternType(String patternType) {
+    public void setPatternType(PatternType patternType) {
         this.patternType = patternType;
     }
 }
