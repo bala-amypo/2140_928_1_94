@@ -1,43 +1,68 @@
-package com.example.demo.controller;
+package com.example.demo.service;
 
+import com.example.demo.model.Bin;
 import com.example.demo.model.UsagePatternModel;
-import com.example.demo.service.UsagePatternModelService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import com.example.demo.repository.BinRepository;
+import com.example.demo.repository.UsagePatternModelRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/models")
-public class UsagePatternModelController {
+@Service
+public class UsagePatternModelService {
 
-    private final UsagePatternModelService modelService;
+    private final UsagePatternModelRepository modelRepository;
+    private final BinRepository binRepository;
 
-    public UsagePatternModelController(UsagePatternModelService modelService) {
-        this.modelService = modelService;
+    public UsagePatternModelService(UsagePatternModelRepository modelRepository,
+                                    BinRepository binRepository) {
+        this.modelRepository = modelRepository;
+        this.binRepository = binRepository;
     }
 
-    @PostMapping
-    public ResponseEntity<UsagePatternModel> createModel(@RequestBody UsagePatternModel model) {
-        UsagePatternModel savedModel = modelService.create(model);
-        return new ResponseEntity<>(savedModel, HttpStatus.CREATED);
+    // ===== CREATE =====
+    public UsagePatternModel create(UsagePatternModel model) {
+
+        if (model.getBin() == null || model.getBin().getId() == null) {
+            throw new RuntimeException("Bin id is required");
+        }
+
+        Bin bin = binRepository.findById(model.getBin().getId())
+                .orElseThrow(() -> new RuntimeException("Bin not found"));
+
+        model.setBin(bin);
+
+        return modelRepository.save(model);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UsagePatternModel> updateModel(@PathVariable Long id,
-                                                         @RequestBody UsagePatternModel model) {
-        UsagePatternModel updatedModel = modelService.update(id, model);
-        return ResponseEntity.ok(updatedModel);
+    // ===== UPDATE =====
+    public UsagePatternModel update(Long id, UsagePatternModel model) {
+
+        UsagePatternModel existing = modelRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usage pattern model not found"));
+
+        existing.setAverageDailyUsage(model.getAverageDailyUsage());
+        existing.setPeakUsage(model.getPeakUsage());
+        existing.setPatternType(model.getPatternType());
+
+        if (model.getBin() != null && model.getBin().getId() != null) {
+            Bin bin = binRepository.findById(model.getBin().getId())
+                    .orElseThrow(() -> new RuntimeException("Bin not found"));
+            existing.setBin(bin);
+        }
+
+        return modelRepository.save(existing);
     }
 
-    @GetMapping
-    public ResponseEntity<List<UsagePatternModel>> getAllModels() {
-        return ResponseEntity.ok(modelService.getAll());
+    // ===== GET ALL =====
+    public List<UsagePatternModel> getAll() {
+        return modelRepository.findAll();
     }
 
-    @GetMapping("/bin/{binId}")
-    public ResponseEntity<List<UsagePatternModel>> getModelsByBin(@PathVariable Long binId) {
-        return ResponseEntity.ok(modelService.getByBinId(binId));
+    // ===== GET BY BIN =====
+    public List<UsagePatternModel> getByBinId(Long binId) {
+        Bin bin = binRepository.findById(binId)
+                .orElseThrow(() -> new RuntimeException("Bin not found"));
+        return modelRepository.findByBin(bin);
     }
 }
