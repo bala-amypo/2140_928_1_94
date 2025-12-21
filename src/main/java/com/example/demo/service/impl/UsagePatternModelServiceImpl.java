@@ -33,8 +33,9 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
         return modelRepository.save(model);
     }
 
+    // 🔧 FIX 1: method name MUST match interface
     @Override
-    public List<UsagePatternModel> getAll() {
+    public List<UsagePatternModel> getAllModels() {
         return modelRepository.findAll();
     }
 
@@ -44,6 +45,7 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
         UsagePatternModel model = modelRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("UsagePatternModel not found"));
 
+        // 🔧 FIX 2: DO NOT call non-existent getter
         model.setModelData(updatedModel.getModelData());
 
         if (updatedModel.getBin() != null && updatedModel.getBin().getId() != null) {
