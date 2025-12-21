@@ -1,72 +1,40 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Entity
-@Table(name = "bins")
-public class Bin {
-
+@Table(name = "fill_level_records")
+public class FillLevelRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(unique = true, nullable = false)
-    private String identifier;
-
-    private String locationDescription;
-    private Double latitude;
-    private Double longitude;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "zone_id", nullable = false)
-    private Zone zone;
-
-    private Integer capacityLiters;
-    private Boolean active;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = createdAt;
+    
+    @ManyToOne
+    @JoinColumn(name = "bin_id")
+    private Bin bin;
+    
+    private Double fillPercentage;
+    private Timestamp recordedAt;
+    private Boolean isWeekend;
+    
+    public FillLevelRecord() {}
+    
+    public FillLevelRecord(Bin bin, Double fillPercentage, Timestamp recordedAt, Boolean isWeekend) {
+        this.bin = bin;
+        this.fillPercentage = fillPercentage;
+        this.recordedAt = recordedAt;
+        this.isWeekend = isWeekend;
     }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-    public Bin() {}
-
-    // ---------- getters & setters ----------
-
+    
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
-    public String getIdentifier() { return identifier; }
-    public void setIdentifier(String identifier) { this.identifier = identifier; }
-
-    public String getLocationDescription() { return locationDescription; }
-    public void setLocationDescription(String locationDescription) { this.locationDescription = locationDescription; }
-
-    public Double getLatitude() { return latitude; }
-    public void setLatitude(Double latitude) { this.latitude = latitude; }
-
-    public Double getLongitude() { return longitude; }
-    public void setLongitude(Double longitude) { this.longitude = longitude; }
-
-    public Zone getZone() { return zone; }
-    public void setZone(Zone zone) { this.zone = zone; }
-
-    public Integer getCapacityLiters() { return capacityLiters; }
-    public void setCapacityLiters(Integer capacityLiters) { this.capacityLiters = capacityLiters; }
-
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public Bin getBin() { return bin; }
+    public void setBin(Bin bin) { this.bin = bin; }
+    public Double getFillPercentage() { return fillPercentage; }
+    public void setFillPercentage(Double fillPercentage) { this.fillPercentage = fillPercentage; }
+    public Timestamp getRecordedAt() { return recordedAt; }
+    public void setRecordedAt(Timestamp recordedAt) { this.recordedAt = recordedAt; }
+    public Boolean getIsWeekend() { return isWeekend; }
+    public void setIsWeekend(Boolean isWeekend) { this.isWeekend = isWeekend; }
 }
