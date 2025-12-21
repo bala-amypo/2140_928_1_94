@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -11,36 +11,62 @@ public class Bin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true, nullable = false)
     private String identifier;
 
     private String locationDescription;
     private Double latitude;
     private Double longitude;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "zone_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "zone_id", nullable = false)
     private Zone zone;
 
-    @Column(nullable = false)
     private Integer capacityLiters;
-
-    @Column(nullable = false)
-    private Boolean active = true;
+    private Boolean active;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     @PrePersist
-    void onCreate() {
+    protected void onCreate() {
         createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+        updatedAt = createdAt;
     }
 
     @PreUpdate
-    void onUpdate() {
+    protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
 
-    // getters and setters
+    public Bin() {}
+
+    // ---------- getters & setters ----------
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getIdentifier() { return identifier; }
+    public void setIdentifier(String identifier) { this.identifier = identifier; }
+
+    public String getLocationDescription() { return locationDescription; }
+    public void setLocationDescription(String locationDescription) { this.locationDescription = locationDescription; }
+
+    public Double getLatitude() { return latitude; }
+    public void setLatitude(Double latitude) { this.latitude = latitude; }
+
+    public Double getLongitude() { return longitude; }
+    public void setLongitude(Double longitude) { this.longitude = longitude; }
+
+    public Zone getZone() { return zone; }
+    public void setZone(Zone zone) { this.zone = zone; }
+
+    public Integer getCapacityLiters() { return capacityLiters; }
+    public void setCapacityLiters(Integer capacityLiters) { this.capacityLiters = capacityLiters; }
+
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 }
