@@ -4,10 +4,9 @@ import com.example.demo.model.User;
 import java.util.List;
 
 public interface UserService {
-    User createUser(User user);
-    User getUserById(Long id);
-    List<User> getAllUsers();
-    User updateUser(Long id, User user);
-    void deleteUser(Long id);
-    boolean existsByEmail(String email);
+    User create(User user);
+    User getById(Long id);
+    List<User> getAll();
+    User update(Long id, User user);
+    void delete(Long id);
 }

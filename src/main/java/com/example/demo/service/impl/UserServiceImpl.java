@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.exception.ResourceAlreadyExistsException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -18,42 +19,41 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User createUser(User user) {
-        if (existsByEmail(user.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
-        }
+    public User create(User user) {
+        // Check if email already exists
+        userRepository.findByEmail(user.getEmail()).ifPresent(u -> {
+            throw new ResourceAlreadyExistsException("User with email " + user.getEmail() + " already exists");
+        });
         return userRepository.save(user);
     }
 
     @Override
-    public User getUserById(Long id) {
+    public User getById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> getAll() {
         return userRepository.findAll();
     }
 
     @Override
-    public User updateUser(Long id, User user) {
-        User existing = getUserById(id);
-        existing.setFullName(user.getFullName());
+    public User update(Long id, User user) {
+        User existing = getById(id);
+
+        existing.setName(user.getName());
         existing.setEmail(user.getEmail());
         existing.setPassword(user.getPassword());
         existing.setRole(user.getRole());
+        existing.setActive(user.getActive());
+
         return userRepository.save(existing);
     }
 
     @Override
-    public void deleteUser(Long id) {
-        User existing = getUserById(id);
+    public void delete(Long id) {
+        User existing = getById(id);
         userRepository.delete(existing);
-    }
-
-    @Override
-    public boolean existsByEmail(String email) {
-        return userRepository.existsByEmail(email);
     }
 }
