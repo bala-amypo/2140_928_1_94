@@ -23,13 +23,12 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
 
     @Override
     public UsagePatternModel createModel(UsagePatternModel model) {
-
         if (model.getBin() == null || model.getBin().getId() == null) {
             throw new RuntimeException("Bin must be provided");
         }
 
-        Long binId = model.getBin().getId();
-        Bin bin = binRepository.findById(binId)
+        // Fetch Bin from DB
+        Bin bin = binRepository.findById(model.getBin().getId())
                 .orElseThrow(() -> new RuntimeException("Bin not found"));
         model.setBin(bin);
 
@@ -38,7 +37,6 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
 
     @Override
     public UsagePatternModel updateModel(Long id, UsagePatternModel updatedModel) {
-
         UsagePatternModel existingModel = modelRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("UsagePatternModel not found"));
 
@@ -47,8 +45,7 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
         existingModel.setPatternType(updatedModel.getPatternType());
 
         if (updatedModel.getBin() != null && updatedModel.getBin().getId() != null) {
-            Long binId = updatedModel.getBin().getId();
-            Bin bin = binRepository.findById(binId)
+            Bin bin = binRepository.findById(updatedModel.getBin().getId())
                     .orElseThrow(() -> new RuntimeException("Bin not found"));
             existingModel.setBin(bin);
         }
@@ -66,10 +63,9 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
         Bin bin = binRepository.findById(binId)
                 .orElseThrow(() -> new RuntimeException("Bin not found"));
 
-        List<UsagePatternModel> models = modelRepository.findByBin(bin);
-        if (models.isEmpty()) {
-            throw new RuntimeException("No UsagePatternModel found for this Bin");
-        }
-        return models.get(0); // assuming one model per bin
+        return modelRepository.findByBin(bin)
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("UsagePatternModel for Bin not found"));
     }
 }
