@@ -11,4 +11,11 @@ public interface OverflowPredictionService {
     OverflowPrediction getById(Long id);
 
     List<OverflowPrediction> getAll();
+
+    // New required endpoints
+    OverflowPrediction generatePrediction(Long binId);
+
+    List<OverflowPrediction> getByBin(Long binId);
+
+    OverflowPrediction getLatestForZone(Long zoneId);
 }
