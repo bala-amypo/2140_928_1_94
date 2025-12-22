@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.UsagePatternModel;
 import com.example.demo.service.UsagePatternModelService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class UsagePatternModelController {
 
     @PostMapping
     public ResponseEntity<UsagePatternModel> createModel(
-            @RequestBody UsagePatternModel model) {
+            @Valid @RequestBody UsagePatternModel model) {
         UsagePatternModel savedModel = modelService.create(model);
         return new ResponseEntity<>(savedModel, HttpStatus.CREATED);
     }
@@ -28,7 +29,7 @@ public class UsagePatternModelController {
     @PutMapping("/{id}")
     public ResponseEntity<UsagePatternModel> updateModel(
             @PathVariable Long id,
-            @RequestBody UsagePatternModel model) {
+            @Valid @RequestBody UsagePatternModel model) {
         return ResponseEntity.ok(modelService.update(id, model));
     }
 

@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Bin;
 import com.example.demo.model.UsagePatternModel;
 import com.example.demo.repository.BinRepository;
@@ -12,56 +13,51 @@ import java.util.List;
 @Service
 public class UsagePatternModelServiceImpl implements UsagePatternModelService {
 
-    private final UsagePatternModelRepository modelRepository;
+    private final UsagePatternModelRepository repository;
     private final BinRepository binRepository;
 
-    public UsagePatternModelServiceImpl(UsagePatternModelRepository modelRepository,
-                                        BinRepository binRepository) {
-        this.modelRepository = modelRepository;
+    public UsagePatternModelServiceImpl(
+            UsagePatternModelRepository repository,
+            BinRepository binRepository) {
+        this.repository = repository;
         this.binRepository = binRepository;
     }
 
     @Override
     public UsagePatternModel create(UsagePatternModel model) {
-        if (model.getBin() == null || model.getBin().getId() == null) {
-            throw new RuntimeException("Bin is required");
-        }
+        Long binId = model.getBin().getId();
 
-        Bin bin = binRepository.findById(model.getBin().getId())
-                .orElseThrow(() -> new RuntimeException("Bin not found"));
+        Bin bin = binRepository.findById(binId)
+                .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
+
         model.setBin(bin);
-
-        return modelRepository.save(model);
+        return repository.save(model);
     }
 
     @Override
-    public UsagePatternModel update(Long id, UsagePatternModel updatedModel) {
-        UsagePatternModel model = modelRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Model not found"));
+    public UsagePatternModel update(Long id, UsagePatternModel model) {
+        UsagePatternModel existing = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Usage Pattern Model not found"));
 
-        model.setAverageDailyUsage(updatedModel.getAverageDailyUsage());
-        model.setPeakUsage(updatedModel.getPeakUsage());
-        model.setPatternType(updatedModel.getPatternType());
+        Long binId = model.getBin().getId();
+        Bin bin = binRepository.findById(binId)
+                .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
 
-        if (updatedModel.getBin() != null && updatedModel.getBin().getId() != null) {
-            Bin bin = binRepository.findById(updatedModel.getBin().getId())
-                    .orElseThrow(() -> new RuntimeException("Bin not found"));
-            model.setBin(bin);
-        }
+        existing.setBin(bin);
+        existing.setAverageDailyUsage(model.getAverageDailyUsage());
+        existing.setPeakUsage(model.getPeakUsage());
+        existing.setPatternType(model.getPatternType());
 
-        return modelRepository.save(model);
+        return repository.save(existing);
     }
 
     @Override
     public List<UsagePatternModel> getAll() {
-        return modelRepository.findAll();
+        return repository.findAll();
     }
 
     @Override
     public List<UsagePatternModel> getByBinId(Long binId) {
-        Bin bin = binRepository.findById(binId)
-                .orElseThrow(() -> new RuntimeException("Bin not found"));
-
-        return modelRepository.findByBin(bin);
+        return repository.findByBinId(binId);
     }
 }
