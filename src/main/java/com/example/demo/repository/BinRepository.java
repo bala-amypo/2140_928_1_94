@@ -13,4 +13,7 @@ public interface BinRepository extends JpaRepository<Bin, Long> {
 
     @Query("SELECT b FROM Bin b JOIN FETCH b.zone")
     List<Bin> findAllWithZone();
+
+    @Query("SELECT b FROM Bin b JOIN FETCH b.zone WHERE b.id = :id")
+    Optional<Bin> findByIdWithZone(Long id);
 }

@@ -63,20 +63,20 @@ public class BinServiceImpl implements BinService {
     @Override
     @Transactional(readOnly = true)
     public Bin getById(Long id) {
-        return binRepository.findById(id)
+        return binRepository.findByIdWithZone(id)
                 .orElseThrow(() -> new RuntimeException("Bin not found"));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Bin> getAll() {
-        // IMPORTANT: this avoids LazyInitializationException
         return binRepository.findAllWithZone();
     }
 
     @Override
     public void deactivate(Long id) {
-        Bin bin = getById(id);
+        Bin bin = binRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Bin not found"));
         bin.setActive(false);
         binRepository.save(bin);
     }
