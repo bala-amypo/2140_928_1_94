@@ -23,6 +23,7 @@ public class BinServiceImpl implements BinService {
         this.zoneRepository = zoneRepository;
     }
 
+    // -------------------- CREATE --------------------
     @Override
     public Bin create(Bin bin) {
         if (bin.getIdentifier() != null &&
@@ -39,9 +40,10 @@ public class BinServiceImpl implements BinService {
         return binRepository.save(bin);
     }
 
+    // -------------------- UPDATE --------------------
     @Override
     public Bin update(Long id, Bin updatedBin) {
-        Bin bin = binRepository.findById(id)
+        Bin bin = binRepository.findByIdWithZone(id)
                 .orElseThrow(() -> new RuntimeException("Bin not found"));
 
         bin.setIdentifier(updatedBin.getIdentifier());
@@ -60,6 +62,7 @@ public class BinServiceImpl implements BinService {
         return binRepository.save(bin);
     }
 
+    // -------------------- GET BY ID --------------------
     @Override
     @Transactional(readOnly = true)
     public Bin getById(Long id) {
@@ -67,15 +70,17 @@ public class BinServiceImpl implements BinService {
                 .orElseThrow(() -> new RuntimeException("Bin not found"));
     }
 
+    // -------------------- GET ALL --------------------
     @Override
     @Transactional(readOnly = true)
     public List<Bin> getAll() {
         return binRepository.findAllWithZone();
     }
 
+    // -------------------- DEACTIVATE --------------------
     @Override
     public void deactivate(Long id) {
-        Bin bin = binRepository.findById(id)
+        Bin bin = binRepository.findByIdWithZone(id)
                 .orElseThrow(() -> new RuntimeException("Bin not found"));
         bin.setActive(false);
         binRepository.save(bin);
