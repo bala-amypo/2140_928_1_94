@@ -6,10 +6,12 @@ import com.example.demo.repository.BinRepository;
 import com.example.demo.repository.ZoneRepository;
 import com.example.demo.service.BinService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class BinServiceImpl implements BinService {
 
     private final BinRepository binRepository;
@@ -59,12 +61,14 @@ public class BinServiceImpl implements BinService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Bin getById(Long id) {
         return binRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Bin not found"));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Bin> getAll() {
         return binRepository.findAll();
     }
