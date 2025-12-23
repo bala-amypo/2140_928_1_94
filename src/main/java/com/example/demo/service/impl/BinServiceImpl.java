@@ -70,7 +70,8 @@ public class BinServiceImpl implements BinService {
     @Override
     @Transactional(readOnly = true)
     public List<Bin> getAll() {
-        return binRepository.findAll();
+        // IMPORTANT: this avoids LazyInitializationException
+        return binRepository.findAllWithZone();
     }
 
     @Override
