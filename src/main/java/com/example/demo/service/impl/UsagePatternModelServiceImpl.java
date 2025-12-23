@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional  // <-- ensures create/update are transactional
+@Transactional  // All create/update operations are transactional
 public class UsagePatternModelServiceImpl implements UsagePatternModelService {
 
     private final UsagePatternModelRepository repository;
@@ -33,6 +33,11 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
         Bin bin = binRepository.findById(binId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
 
+        // Optional: Prevent creating model for deactivated bins
+        if (!bin.getActive()) {
+            throw new RuntimeException("Cannot create model for deactivated bin");
+        }
+
         model.setBin(bin);
         return repository.save(model);
     }
@@ -46,6 +51,10 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
         Long binId = model.getBin().getId();
         Bin bin = binRepository.findById(binId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
+
+        if (!bin.getActive()) {
+            throw new RuntimeException("Cannot assign model to deactivated bin");
+        }
 
         existing.setBin(bin);
         existing.setAverageDailyUsage(model.getAverageDailyUsage());
