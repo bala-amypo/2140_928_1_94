@@ -5,10 +5,12 @@ import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional  // All write operations (create, update, delete) are transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -19,17 +21,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(User user) {
-        // Simply save the user; no custom exception for duplicates
         return userRepository.save(user);
     }
 
     @Override
+    @Transactional(readOnly = true)  // read-only transaction
     public User getById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
     }
 
     @Override
+    @Transactional(readOnly = true)  // read-only transaction
     public List<User> getAll() {
         return userRepository.findAll();
     }
