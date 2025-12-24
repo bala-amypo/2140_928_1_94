@@ -5,10 +5,12 @@ import com.example.demo.model.Zone;
 import com.example.demo.repository.ZoneRepository;
 import com.example.demo.service.ZoneService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional  // All create/update operations are transactional
 public class ZoneServiceImpl implements ZoneService {
 
     private final ZoneRepository zoneRepository;
@@ -31,6 +33,7 @@ public class ZoneServiceImpl implements ZoneService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Zone getById(Long id) {
         return zoneRepository.findById(id)
                 .orElseThrow(() ->
@@ -39,6 +42,7 @@ public class ZoneServiceImpl implements ZoneService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Zone> getAll() {
         return zoneRepository.findAll();
     }
