@@ -23,7 +23,8 @@ public class UsagePatternModelController {
     public ResponseEntity<UsagePatternModel> createModel(
             @Valid @RequestBody UsagePatternModel model) {
         UsagePatternModel savedModel = modelService.create(model);
-        return new ResponseEntity<>(savedModel, HttpStatus.CREATED);
+        // ✅ Only change: return 200 OK instead of 201 Created
+        return new ResponseEntity<>(savedModel, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
