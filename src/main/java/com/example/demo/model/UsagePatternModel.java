@@ -12,8 +12,9 @@ public class UsagePatternModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 🔴 FIX: LAZY → EAGER
     @NotNull(message = "Bin must not be null")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "bin_id", nullable = false)
     private Bin bin;
 

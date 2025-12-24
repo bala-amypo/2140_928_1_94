@@ -18,7 +18,8 @@ public class Bin {
     private Double latitude;
     private Double longitude;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    // 🔴 FIX: LAZY → EAGER
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "zone_id", nullable = false)
     private Zone zone;
 
