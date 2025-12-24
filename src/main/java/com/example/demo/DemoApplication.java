@@ -10,3 +10,20 @@ public class DemoApplication {
         SpringApplication.run(DemoApplication.class, args);
     }
 }
+
+com/example/demo
+├── config
+│   ├── SwaggerConfig.java
+│   └── SecurityConfig.java   ← NEW
+├── controller
+│   ├── AuthController.java   ← NEW
+│   ├── UserController.java
+│   ├── BinController.java
+│   └── ...
+├── security
+│   ├── JwtTokenProvider.java ← NEW
+│   └── CustomUserDetailsService.java ← NEW
+├── model
+├── repository
+├── service
+└── DemoApplication.java
