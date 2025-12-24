@@ -15,6 +15,11 @@ public class OverflowPrediction {
     @JoinColumn(name = "bin_id", nullable = false)
     private Bin bin;
 
+    // 🔴 Added per spec
+    @ManyToOne
+    @JoinColumn(name = "model_id", nullable = false)
+    private UsagePatternModel modelUsed;
+
     private Double predictedLevel;
 
     private LocalDateTime predictedAt;
@@ -37,6 +42,14 @@ public class OverflowPrediction {
 
     public void setBin(Bin bin) {
         this.bin = bin;
+    }
+
+    public UsagePatternModel getModelUsed() {
+        return modelUsed;
+    }
+
+    public void setModelUsed(UsagePatternModel modelUsed) {
+        this.modelUsed = modelUsed;
     }
 
     public Double getPredictedLevel() {

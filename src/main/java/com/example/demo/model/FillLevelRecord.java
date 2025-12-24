@@ -12,7 +12,7 @@ public class FillLevelRecord {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "bin_id")
+    @JoinColumn(name = "bin_id", nullable = false) // ✅ added nullable=false
     private Bin bin;
 
     private Double fillPercentage;
