@@ -3,65 +3,58 @@ package com.example.demo.controller;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtTokenProvider;
+import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
 
-    public AuthController(AuthenticationManager authenticationManager,
-                          JwtTokenProvider jwtTokenProvider,
+    public AuthController(UserService userService,
                           UserRepository userRepository,
-                          PasswordEncoder passwordEncoder) {
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenProvider = jwtTokenProvider;
+                          PasswordEncoder passwordEncoder,
+                          JwtTokenProvider jwtTokenProvider,
+                          AuthenticationManager authenticationManager) {
+        this.userService = userService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.authenticationManager = authenticationManager;
     }
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@Valid @RequestBody User user) {
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        if (user.getRole() == null) {
-            user.setRole("USER");
-        }
-
-        if (user.getActive() == null) {
-            user.setActive(true);
-        }
-
-        return ResponseEntity.ok(userRepository.save(user));
+        User created = userService.create(user);
+        return ResponseEntity.ok(created);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> loginData) {
+        String email = loginData.get("email");
+        String password = loginData.get("password");
 
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        user.getEmail(),
-                        user.getPassword()
-                )
+                new UsernamePasswordAuthenticationToken(email, password)
         );
 
-        User dbUser = userRepository.findByEmail(user.getEmail()).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow();
 
-        String token = jwtTokenProvider.generateToken(
-                dbUser.getId(),
-                dbUser.getEmail(),
-                dbUser.getRole()
-        );
+        String token = jwtTokenProvider.generateToken(user.getEmail(), user.getRole());
 
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(Map.of("token", token));
     }
 }
