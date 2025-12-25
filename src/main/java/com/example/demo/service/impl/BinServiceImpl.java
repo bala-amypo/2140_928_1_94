@@ -6,12 +6,10 @@ import com.example.demo.repository.BinRepository;
 import com.example.demo.repository.ZoneRepository;
 import com.example.demo.service.BinService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Transactional
 public class BinServiceImpl implements BinService {
 
     private final BinRepository binRepository;
@@ -23,7 +21,6 @@ public class BinServiceImpl implements BinService {
         this.zoneRepository = zoneRepository;
     }
 
-    // -------------------- CREATE --------------------
     @Override
     public Bin create(Bin bin) {
         if (bin.getIdentifier() != null &&
@@ -40,7 +37,6 @@ public class BinServiceImpl implements BinService {
         return binRepository.save(bin);
     }
 
-    // -------------------- UPDATE --------------------
     @Override
     public Bin update(Long id, Bin updatedBin) {
         Bin bin = binRepository.findByIdWithZone(id)
@@ -62,22 +58,17 @@ public class BinServiceImpl implements BinService {
         return binRepository.save(bin);
     }
 
-    // -------------------- GET BY ID --------------------
     @Override
-    @Transactional(readOnly = true)
     public Bin getById(Long id) {
         return binRepository.findByIdWithZone(id)
                 .orElseThrow(() -> new RuntimeException("Bin not found"));
     }
 
-    // -------------------- GET ALL --------------------
     @Override
-    @Transactional(readOnly = true)
     public List<Bin> getAll() {
         return binRepository.findAllWithZone();
     }
 
-    // -------------------- DEACTIVATE --------------------
     @Override
     public void deactivate(Long id) {
         Bin bin = binRepository.findByIdWithZone(id)

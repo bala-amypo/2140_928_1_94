@@ -7,12 +7,10 @@ import com.example.demo.repository.BinRepository;
 import com.example.demo.repository.OverflowPredictionRepository;
 import com.example.demo.service.OverflowPredictionService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Transactional  // All create/update operations are transactional
 public class OverflowPredictionServiceImpl implements OverflowPredictionService {
 
     private final OverflowPredictionRepository predictionRepository;
@@ -30,14 +28,12 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
     }
 
     @Override
-    @Transactional(readOnly = true)
     public OverflowPrediction getById(Long id) {
         return predictionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("OverflowPrediction not found with id: " + id));
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<OverflowPrediction> getAll() {
         return predictionRepository.findAll();
     }
@@ -49,12 +45,11 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
 
         OverflowPrediction prediction = new OverflowPrediction();
         prediction.setBin(bin);
-        prediction.setPredictedLevel(0.0); // Replace with actual prediction logic
+        prediction.setPredictedLevel(0.0);
         return predictionRepository.save(prediction);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<OverflowPrediction> getByBin(Long binId) {
         Bin bin = binRepository.findById(binId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id: " + binId));
@@ -62,7 +57,6 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
     }
 
     @Override
-    @Transactional(readOnly = true)
     public OverflowPrediction getLatestForZone(Long zoneId) {
         return predictionRepository.findTopByBin_Zone_IdOrderByPredictedAtDesc(zoneId)
                 .orElseThrow(() -> new ResourceNotFoundException("No predictions found for zone id: " + zoneId));

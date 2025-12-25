@@ -7,12 +7,10 @@ import com.example.demo.repository.BinRepository;
 import com.example.demo.repository.UsagePatternModelRepository;
 import com.example.demo.service.UsagePatternModelService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-@Transactional  // All create/update operations are transactional
 public class UsagePatternModelServiceImpl implements UsagePatternModelService {
 
     private final UsagePatternModelRepository repository;
@@ -25,7 +23,6 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
         this.binRepository = binRepository;
     }
 
-    // -------------------- CREATE --------------------
     @Override
     public UsagePatternModel create(UsagePatternModel model) {
         Long binId = model.getBin().getId();
@@ -33,7 +30,6 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
         Bin bin = binRepository.findById(binId)
                 .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
 
-        // Optional: Prevent creating model for deactivated bins
         if (!bin.getActive()) {
             throw new RuntimeException("Cannot create model for deactivated bin");
         }
@@ -42,7 +38,6 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
         return repository.save(model);
     }
 
-    // -------------------- UPDATE --------------------
     @Override
     public UsagePatternModel update(Long id, UsagePatternModel model) {
         UsagePatternModel existing = repository.findById(id)
@@ -64,16 +59,12 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
         return repository.save(existing);
     }
 
-    // -------------------- GET ALL --------------------
     @Override
-    @Transactional(readOnly = true)
     public List<UsagePatternModel> getAll() {
         return repository.findAll();
     }
 
-    // -------------------- GET BY BIN ID --------------------
     @Override
-    @Transactional(readOnly = true)
     public List<UsagePatternModel> getByBinId(Long binId) {
         return repository.findByBinId(binId);
     }
