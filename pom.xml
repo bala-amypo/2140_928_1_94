@@ -90,13 +90,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Mockito annotations support -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-inline</artifactId>
-            <version>5.5.0</version>
-            <scope>test</scope>
-        </dependency>
+       
 
         <!-- Spring Boot Test -->
         <dependency>
@@ -142,3 +136,8 @@
     </build>
 
 </project>
+
+
+mvn clean
+rm -rf ~/.m2/repository/org/mockito
+mvn clean install -U
