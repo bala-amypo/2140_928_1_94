@@ -3,59 +3,34 @@ package com.example.demo.service.impl;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Zone;
 import com.example.demo.repository.ZoneRepository;
-import com.example.demo.service.ZoneService;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+public class ZoneServiceImpl {
 
-@Service
-public class ZoneServiceImpl implements ZoneService {
+    private final ZoneRepository repo;
 
-    private final ZoneRepository zoneRepository;
-
-    public ZoneServiceImpl(ZoneRepository zoneRepository) {
-        this.zoneRepository = zoneRepository;
+    public ZoneServiceImpl(ZoneRepository repo) {
+        this.repo = repo;
     }
 
-    @Override
-    public Zone create(Zone zone) {
-        zone.setId(null);
-
-        if (zone.getActive() == null) {
-            zone.setActive(true);
-        }
-
-        return zoneRepository.save(zone);
+    public Zone createZone(Zone z) {
+        z.setActive(true);
+        return repo.save(z);
     }
 
-    @Override
-    public Zone getById(Long id) {
-        return zoneRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Zone not found with id: " + id)
-                );
+    public Zone getZoneById(Long id) {
+        return repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Zone not found"));
     }
 
-    @Override
-    public List<Zone> getAll() {
-        return zoneRepository.findAll();
+    public Zone updateZone(Long id, Zone update) {
+        Zone z = getZoneById(id);
+        if (update.getDescription() != null) z.setDescription(update.getDescription());
+        return repo.save(z);
     }
 
-    @Override
-    public Zone update(Long id, Zone zone) {
-        Zone existing = getById(id);
-
-        existing.setZoneName(zone.getZoneName());
-        existing.setDescription(zone.getDescription());
-        existing.setActive(zone.getActive());
-
-        return zoneRepository.save(existing);
-    }
-
-    @Override
-    public void deactivate(Long id) {
-        Zone zone = getById(id);
-        zone.setActive(false);
-        zoneRepository.save(zone);
+    public void deactivateZone(Long id) {
+        Zone z = getZoneById(id);
+        z.setActive(false);
+        repo.save(z);
     }
 }

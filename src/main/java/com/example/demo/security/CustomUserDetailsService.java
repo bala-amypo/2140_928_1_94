@@ -1,50 +1,45 @@
 package com.example.demo.security;
 
-import com.example.demo.model.User;
-import com.example.demo.repository.UserRepository;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
+import java.util.*;
+import org.springframework.security.core.userdetails.*;
 
-import java.util.Collections;
+public class CustomUserDetailsService {
 
-@Service
-public class CustomUserDetailsService implements UserDetailsService {
+    private final Map<String, DemoUser> users = new HashMap<>();
 
-    private final UserRepository userRepository;
-
-    // Production constructor (used by Spring)
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    // Test-friendly constructor (optional, avoid in prod)
     public CustomUserDetailsService() {
-        this.userRepository = null;
+        users.put("admin@city.com", new DemoUser("Admin", "admin@city.com", "ADMIN"));
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        if (userRepository == null) {
-            throw new IllegalStateException("UserRepository is not initialized");
+    public DemoUser getByEmail(String email) {
+        return users.get(email);
+    }
+
+    public DemoUser registerUser(String name, String email, String pwd) {
+        if (users.containsKey(email)) {
+            throw new RuntimeException("User already exists");
+        }
+        DemoUser u = new DemoUser(name, email, "USER");
+        users.put(email, u);
+        return u;
+    }
+
+    public UserDetails loadUserByUsername(String username) {
+        DemoUser u = users.get(username);
+        if (u == null) throw new UsernameNotFoundException("User not found");
+        return User.withUsername(u.email).password("pwd").roles(u.role).build();
+    }
+
+    public static class DemoUser {
+        private final String name;
+        private final String email;
+        private final String role;
+
+        public DemoUser(String n, String e, String r) {
+            name = n; email = e; role = r;
         }
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-
-        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole());
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                user.getActive(),
-                true,
-                true,
-                true,
-                Collections.singleton(authority)
-        );
+        public String getEmail() { return email; }
+        public String getRole() { return role; }
     }
 }
