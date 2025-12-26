@@ -2,16 +2,16 @@ package com.example.demo.repository;
 
 import com.example.demo.model.Bin;
 import com.example.demo.model.FillLevelRecord;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface FillLevelRecordRepository {
-
-    FillLevelRecord save(FillLevelRecord record);
+public interface FillLevelRecordRepository extends JpaRepository<FillLevelRecord, Long> {
 
     List<FillLevelRecord> findByBinId(Long binId);
 
-    // Explicit, plain-Java method
-    Optional<FillLevelRecord> findLatestByBin(Bin bin);
+    Optional<FillLevelRecord> findTop1ByBinIdOrderByRecordedAtDesc(Long binId);
+
+    Optional<FillLevelRecord> findTop1ByBinOrderByRecordedAtDesc(Bin bin);
 }

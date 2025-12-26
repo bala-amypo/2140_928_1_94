@@ -1,55 +1,37 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.*;
-import com.example.demo.model.*;
-import com.example.demo.repository.*;
+import com.example.demo.model.Bin;
+import com.example.demo.repository.BinRepository;
+import com.example.demo.service.BinService;
 
 import java.util.List;
 
-public class BinServiceImpl {
+public class BinServiceImpl implements BinService {
 
-    private final BinRepository binRepo;
-    private final ZoneRepository zoneRepo;
+    private final BinRepository binRepository;
 
-    public BinServiceImpl(BinRepository b, ZoneRepository z) {
-        binRepo = b;
-        zoneRepo = z;
+    public BinServiceImpl(BinRepository binRepository) {
+        this.binRepository = binRepository;
     }
 
+    @Override
     public Bin createBin(Bin bin) {
-        if (bin.getCapacityLiters() == null || bin.getCapacityLiters() <= 0)
-            throw new BadRequestException("Invalid capacity");
-
-        Zone zone = zoneRepo.findById(bin.getZone().getId())
-                .orElseThrow(() -> new BadRequestException("Zone not found"));
-
-        if (!zone.getActive())
-            throw new BadRequestException("Zone inactive");
-
-        bin.setZone(zone);
-        if (bin.getActive() == null) bin.setActive(true);
-        return binRepo.save(bin);
+        return binRepository.save(bin);
     }
 
-    public Bin getBinById(Long id) {
-        return binRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
+    @Override
+    public Bin updateBin(Bin bin) {
+        return binRepository.save(bin);
     }
 
-    public Bin updateBin(Long id, Bin update) {
-        Bin b = getBinById(id);
-        if (update.getLocationDescription() != null)
-            b.setLocationDescription(update.getLocationDescription());
-        return binRepo.save(b);
-    }
-
-    public void deactivateBin(Long id) {
-        Bin b = getBinById(id);
-        b.setActive(false);
-        binRepo.save(b);
-    }
-
+    @Override
     public List<Bin> getAllBins() {
-        return binRepo.findAll();
+        return binRepository.findAll();
+    }
+
+    @Override
+    public void deactivateBin(Bin b) {
+        b.setActive(false);
+        binRepository.save(b);
     }
 }

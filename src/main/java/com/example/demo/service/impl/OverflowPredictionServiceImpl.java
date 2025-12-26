@@ -1,47 +1,41 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Bin;
 import com.example.demo.model.FillLevelRecord;
 import com.example.demo.model.OverflowPrediction;
-import com.example.demo.repository.BinRepository;
 import com.example.demo.repository.FillLevelRecordRepository;
 import com.example.demo.repository.OverflowPredictionRepository;
+import com.example.demo.service.OverflowPredictionService;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
-public class OverflowPredictionServiceImpl {
+public class OverflowPredictionServiceImpl implements OverflowPredictionService {
 
-    private final OverflowPredictionRepository predictionRepository;
     private final FillLevelRecordRepository recordRepo;
-    private final BinRepository binRepository;
+    private final OverflowPredictionRepository predictionRepo;
 
-    public OverflowPredictionServiceImpl(OverflowPredictionRepository predictionRepository,
-                                         FillLevelRecordRepository recordRepo,
-                                         BinRepository binRepository) {
-        this.predictionRepository = predictionRepository;
+    public OverflowPredictionServiceImpl(FillLevelRecordRepository recordRepo, OverflowPredictionRepository predictionRepo) {
         this.recordRepo = recordRepo;
-        this.binRepository = binRepository;
+        this.predictionRepo = predictionRepo;
     }
 
-    public OverflowPrediction generatePrediction(Long binId) {
-        if (binId == null) {
-            throw new IllegalArgumentException("Bin ID cannot be null");
+    @Override
+    public OverflowPrediction predictOverflow(Bin bin) {
+        Optional<FillLevelRecord> latestRecordOpt = recordRepo.findTop1ByBinOrderByRecordedAtDesc(bin);
+        if (latestRecordOpt.isEmpty()) return null;
+
+        FillLevelRecord latestRecord = latestRecordOpt.get();
+        OverflowPrediction prediction = new OverflowPrediction();
+
+        prediction.setPredictedAt(LocalDateTime.now());
+        prediction.setBin(bin);
+
+        if (latestRecord.getFillLevel() != null && bin.getCapacityLiters() != null) {
+            double fillPercentage = (double) latestRecord.getFillLevel() / bin.getCapacityLiters() * 100;
+            prediction.setFillPercentage(fillPercentage);
         }
 
-        Bin bin = binRepository.findById(binId)
-                .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
-
-        FillLevelRecord latestRecord = recordRepo.findLatestByBin(bin)
-                .orElseThrow(() -> new ResourceNotFoundException("No fill level records found"));
-
-        OverflowPrediction prediction = new OverflowPrediction();
-        prediction.setBin(bin);
-        prediction.setPredictedAt(LocalDateTime.now());
-
-        // Simple rule-based prediction (test-safe)
-        prediction.setWillOverflow(latestRecord.getFillLevel() >= bin.getCapacity());
-
-        return predictionRepository.save(prediction);
+        return predictionRepo.save(prediction);
     }
 }

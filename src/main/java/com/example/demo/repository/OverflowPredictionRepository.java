@@ -1,9 +1,7 @@
 package com.example.demo.repository;
 
-import java.util.*;
-import com.example.demo.model.*;
+import com.example.demo.model.OverflowPrediction;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OverflowPredictionRepository {
-    OverflowPrediction save(OverflowPrediction p);
-    List<OverflowPrediction> findLatestPredictionsForZone(Zone zone);
+public interface OverflowPredictionRepository extends JpaRepository<OverflowPrediction, Long> {
 }

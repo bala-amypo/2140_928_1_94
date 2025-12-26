@@ -1,9 +1,12 @@
 package com.example.demo;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
 public class DemoApplication {
 
     public static void main(String[] args) {
-        // Plain Java entry point (no Spring Boot)
-        System.out.println("Demo application started (no Spring context).");
+        SpringApplication.run(DemoApplication.class, args);
     }
 }

@@ -1,55 +1,25 @@
 package com.example.demo.model;
 
 public class Bin {
-
     private Long id;
-    private int capacityLiters; // capacity in liters
-    private Zone zone;
-    private boolean active;
     private String locationDescription;
+    private Integer capacityLiters; // wrapper for null checks
+    private Boolean active;         // wrapper for null checks
+    private Zone zone;
 
-    // ID
-    public Long getId() {
-        return id;
-    }
+    // Getters and setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getLocationDescription() { return locationDescription; }
+    public void setLocationDescription(String locationDescription) { this.locationDescription = locationDescription; }
 
-    // Capacity
-    public int getCapacityLiters() {
-        return capacityLiters;
-    }
+    public Integer getCapacityLiters() { return capacityLiters; }
+    public void setCapacityLiters(Integer capacityLiters) { this.capacityLiters = capacityLiters; }
 
-    public void setCapacityLiters(int capacityLiters) {
-        this.capacityLiters = capacityLiters;
-    }
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 
-    // Zone
-    public Zone getZone() {
-        return zone;
-    }
-
-    public void setZone(Zone zone) {
-        this.zone = zone;
-    }
-
-    // Active
-    public boolean getActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    // Location Description
-    public String getLocationDescription() {
-        return locationDescription;
-    }
-
-    public void setLocationDescription(String locationDescription) {
-        this.locationDescription = locationDescription;
-    }
+    public Zone getZone() { return zone; }
+    public void setZone(Zone zone) { this.zone = zone; }
 }

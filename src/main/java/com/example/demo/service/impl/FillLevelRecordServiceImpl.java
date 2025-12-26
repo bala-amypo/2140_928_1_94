@@ -1,49 +1,32 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.Bin;
 import com.example.demo.model.FillLevelRecord;
-import com.example.demo.repository.BinRepository;
 import com.example.demo.repository.FillLevelRecordRepository;
+import com.example.demo.service.FillLevelRecordService;
 
 import java.util.List;
+import java.util.Optional;
 
-public class FillLevelRecordServiceImpl {
+public class FillLevelRecordServiceImpl implements FillLevelRecordService {
 
     private final FillLevelRecordRepository recordRepository;
-    private final BinRepository binRepository;
 
-    public FillLevelRecordServiceImpl(FillLevelRecordRepository recordRepository,
-                                      BinRepository binRepository) {
+    public FillLevelRecordServiceImpl(FillLevelRecordRepository recordRepository) {
         this.recordRepository = recordRepository;
-        this.binRepository = binRepository;
     }
 
+    @Override
     public FillLevelRecord createRecord(FillLevelRecord record) {
-        if (record == null) {
-            throw new IllegalArgumentException("Fill level record cannot be null");
-        }
-
-        if (record.getBin() == null || record.getBin().getId() == null) {
-            throw new IllegalArgumentException("Bin information is required");
-        }
-
-        Bin bin = binRepository.findById(record.getBin().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
-
-        record.setBin(bin);
         return recordRepository.save(record);
     }
 
+    @Override
     public List<FillLevelRecord> getRecordsForBin(Long binId) {
-        if (binId == null) {
-            throw new IllegalArgumentException("Bin ID cannot be null");
-        }
-
-        // Validate bin existence
-        binRepository.findById(binId)
-                .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
-
         return recordRepository.findByBinId(binId);
+    }
+
+    @Override
+    public Optional<FillLevelRecord> getLatestRecordForBin(Long binId) {
+        return recordRepository.findTop1ByBinIdOrderByRecordedAtDesc(binId);
     }
 }
