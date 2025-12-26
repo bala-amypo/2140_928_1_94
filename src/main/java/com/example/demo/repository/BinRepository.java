@@ -1,19 +1,12 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.Bin;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import java.util.*;
+import com.example.demo.model.*;
 
-import java.util.List;
-import java.util.Optional;
-
-public interface BinRepository extends JpaRepository<Bin, Long> {
-
+public interface BinRepository {
+    Bin save(Bin b);
+    Optional<Bin> findById(Long id);
+    List<Bin> findAll();
     Optional<Bin> findByIdentifier(String identifier);
-
-    @Query("SELECT b FROM Bin b JOIN FETCH b.zone")
-    List<Bin> findAllWithZone();
-
-    @Query("SELECT b FROM Bin b JOIN FETCH b.zone WHERE b.id = :id")
-    Optional<Bin> findByIdWithZone(Long id);
+    List<Bin> findByZoneAndActiveTrue(Zone zone);
 }
