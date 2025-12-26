@@ -22,6 +22,7 @@
         <java.version>11</java.version>
         <jjwt.version>0.9.1</jjwt.version>
         <testng.version>7.7.0</testng.version>
+        <mysql.version>8.0.33</mysql.version>
     </properties>
     
     <dependencies>
@@ -39,11 +40,18 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         
-        <!-- Database -->
+        <!-- Database - MySQL -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
+        </dependency>
+        
+        <!-- Optional: H2 for testing if needed -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <scope>runtime</scope>
+            <scope>test</scope>
         </dependency>
         
         <!-- JWT -->
