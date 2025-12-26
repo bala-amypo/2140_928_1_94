@@ -1,11 +1,11 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Bin;
 import com.example.demo.model.OverflowPrediction;
-import com.example.demo.repository.BinRepository;
 import com.example.demo.repository.OverflowPredictionRepository;
+import com.example.demo.repository.BinRepository;
 import com.example.demo.service.OverflowPredictionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,52 +13,50 @@ import java.util.List;
 @Service
 public class OverflowPredictionServiceImpl implements OverflowPredictionService {
 
-    private final OverflowPredictionRepository predictionRepository;
-    private final BinRepository binRepository;
+    @Autowired
+    private OverflowPredictionRepository overflowPredictionRepository;
 
-    public OverflowPredictionServiceImpl(OverflowPredictionRepository predictionRepository,
-                                         BinRepository binRepository) {
-        this.predictionRepository = predictionRepository;
-        this.binRepository = binRepository;
-    }
+    @Autowired
+    private BinRepository binRepository;
 
     @Override
     public OverflowPrediction create(OverflowPrediction prediction) {
-        return predictionRepository.save(prediction);
+        return overflowPredictionRepository.save(prediction);
     }
 
     @Override
     public OverflowPrediction getById(Long id) {
-        return predictionRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("OverflowPrediction not found with id: " + id));
+        return overflowPredictionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("OverflowPrediction not found with id " + id));
     }
 
     @Override
     public List<OverflowPrediction> getAll() {
-        return predictionRepository.findAll();
+        return overflowPredictionRepository.findAll();
     }
 
     @Override
     public OverflowPrediction generatePrediction(Long binId) {
         Bin bin = binRepository.findById(binId)
-                .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id: " + binId));
+                .orElseThrow(() -> new RuntimeException("Bin not found with id " + binId));
 
         OverflowPrediction prediction = new OverflowPrediction();
         prediction.setBin(bin);
-        prediction.setPredictedLevel(0.0); // default value
-        return predictionRepository.save(prediction);
+        prediction.setPredictedLevel(0.0); // placeholder logic, replace with real prediction
+
+        return overflowPredictionRepository.save(prediction);
     }
 
     @Override
     public List<OverflowPrediction> getByBin(Long binId) {
         Bin bin = binRepository.findById(binId)
-                .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id: " + binId));
-        return predictionRepository.findByBin(bin);
+                .orElseThrow(() -> new RuntimeException("Bin not found with id " + binId));
+        return overflowPredictionRepository.findByBin(bin);
     }
 
     @Override
     public OverflowPrediction getLatestForZone(Long zoneId) {
-        return predictionRepository.findTopByBin_Zone_IdOrderByPredictedAtDesc(zoneId)
-                .orElseThrow(() -> new ResourceNotFoundException("No predictions found for zone id: " + zoneId));
+        List<OverflowPrediction> predictions = overflowPredictionRepository.findByBin_Zone_Id(zoneId);
+        return predictions.isEmpty() ? null : predictions.get(predictions.size() - 1); // latest
     }
 }

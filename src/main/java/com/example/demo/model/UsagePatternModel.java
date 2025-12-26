@@ -12,7 +12,6 @@ public class UsagePatternModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 🔴 FIX: LAZY → EAGER
     @NotNull(message = "Bin must not be null")
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "bin_id", nullable = false)
@@ -32,41 +31,18 @@ public class UsagePatternModel {
     @Column(name = "pattern_type", nullable = false, length = 20)
     private String patternType;
 
-    // ===== GETTERS & SETTERS =====
+    // ---------- getters & setters ----------
+    public Long getId() { return id; }
 
-    public Long getId() {
-        return id;
-    }
+    public Bin getBin() { return bin; }
+    public void setBin(Bin bin) { this.bin = bin; }
 
-    public Bin getBin() {
-        return bin;
-    }
+    public Double getAverageDailyUsage() { return averageDailyUsage; }
+    public void setAverageDailyUsage(Double averageDailyUsage) { this.averageDailyUsage = averageDailyUsage; }
 
-    public void setBin(Bin bin) {
-        this.bin = bin;
-    }
+    public Double getPeakUsage() { return peakUsage; }
+    public void setPeakUsage(Double peakUsage) { this.peakUsage = peakUsage; }
 
-    public Double getAverageDailyUsage() {
-        return averageDailyUsage;
-    }
-
-    public void setAverageDailyUsage(Double averageDailyUsage) {
-        this.averageDailyUsage = averageDailyUsage;
-    }
-
-    public Double getPeakUsage() {
-        return peakUsage;
-    }
-
-    public void setPeakUsage(Double peakUsage) {
-        this.peakUsage = peakUsage;
-    }
-
-    public String getPatternType() {
-        return patternType;
-    }
-
-    public void setPatternType(String patternType) {
-        this.patternType = patternType;
-    }
+    public String getPatternType() { return patternType; }
+    public void setPatternType(String patternType) { this.patternType = patternType; }
 }

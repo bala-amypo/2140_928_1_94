@@ -18,12 +18,11 @@ public class Bin {
     private Double latitude;
     private Double longitude;
 
-    // 🔴 FIX: LAZY → EAGER
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "zone_id", nullable = false)
     private Zone zone;
 
-    private Integer capacityLiters;
+    private Double capacityLiters;  // 🔴 changed from Integer → Double
     private Boolean active;
 
     private LocalDateTime createdAt;
@@ -43,7 +42,6 @@ public class Bin {
     public Bin() {}
 
     // ---------- getters & setters ----------
-
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -62,8 +60,8 @@ public class Bin {
     public Zone getZone() { return zone; }
     public void setZone(Zone zone) { this.zone = zone; }
 
-    public Integer getCapacityLiters() { return capacityLiters; }
-    public void setCapacityLiters(Integer capacityLiters) { this.capacityLiters = capacityLiters; }
+    public Double getCapacityLiters() { return capacityLiters; }
+    public void setCapacityLiters(Double capacityLiters) { this.capacityLiters = capacityLiters; }
 
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
