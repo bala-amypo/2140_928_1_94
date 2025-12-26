@@ -23,6 +23,7 @@
         <jjwt.version>0.9.1</jjwt.version>
         <testng.version>7.7.0</testng.version>
         <mysql.version>8.0.33</mysql.version>
+        <springdoc.version>1.7.0</springdoc.version>
     </properties>
     
     <dependencies>
@@ -47,7 +48,7 @@
             <version>${mysql.version}</version>
         </dependency>
         
-        <!-- Optional: H2 for testing if needed -->
+        <!-- Optional: H2 for testing -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -59,6 +60,18 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>${jjwt.version}</version>
+        </dependency>
+        
+        <!-- Swagger/OpenAPI -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-webmvc-core</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
         
         <!-- Testing -->
