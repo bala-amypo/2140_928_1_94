@@ -24,42 +24,42 @@
 
     <dependencies>
 
-        <!-- WEB -->
+        <!-- Spring Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- SECURITY -->
+        <!-- Spring Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- JPA -->
+        <!-- Spring Data JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- VALIDATION -->
+        <!-- Validation -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- DATABASES -->
-        <!-- H2 for runtime (optional) -->
+        <!-- MySQL Driver -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.1.1</version>
+        </dependency>
+
+        <!-- H2 (optional, for runtime testing) -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <!-- MySQL driver -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <version>8.1.0</version>
         </dependency>
 
         <!-- JWT -->
@@ -81,31 +81,34 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- SWAGGER / OPENAPI -->
+        <!-- Swagger / OpenAPI -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.3.0</version>
         </dependency>
 
-        <!-- TESTING -->
+        <!-- TestNG -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>7.9.0</version>
             <scope>test</scope>
         </dependency>
-        <!-- MOCKITO -->
+
+        <!-- Mockito -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>5.5.0</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Mockito-TestNG Integration -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-testng</artifactId>
-            <version>5.5.0</version>
+            <version>4.11.0</version>
             <scope>test</scope>
         </dependency>
 
