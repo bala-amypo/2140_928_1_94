@@ -24,6 +24,7 @@
         <testng.version>7.7.0</testng.version>
         <mysql.version>8.0.33</mysql.version>
         <springdoc.version>1.7.0</springdoc.version>
+        <h2.version>2.1.214</h2.version>
     </properties>
     
     <dependencies>
@@ -41,18 +42,20 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         
-        <!-- Database - MySQL -->
+        <!-- Database - H2 (for in-memory testing) -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <!-- Optional: MySQL if you want to switch later -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
-        </dependency>
-        
-        <!-- Optional: H2 for testing -->
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>test</scope>
+            <scope>runtime</scope>
         </dependency>
         
         <!-- JWT -->
