@@ -1,12 +1,11 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Bin;
 import com.example.demo.model.FillLevelRecord;
 import com.example.demo.repository.BinRepository;
 import com.example.demo.repository.FillLevelRecordRepository;
-import com.example.demo.exception.ResourceNotFoundException;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class FillLevelRecordServiceImpl {
@@ -22,7 +21,7 @@ public class FillLevelRecordServiceImpl {
 
     public FillLevelRecord createRecord(FillLevelRecord record) {
         if (record == null) {
-            throw new IllegalArgumentException("Record cannot be null");
+            throw new IllegalArgumentException("Fill level record cannot be null");
         }
 
         if (record.getBin() == null || record.getBin().getId() == null) {
@@ -32,10 +31,6 @@ public class FillLevelRecordServiceImpl {
         Bin bin = binRepository.findById(record.getBin().getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
 
-        if (record.getTimestamp() == null) {
-            record.setTimestamp(LocalDateTime.now());
-        }
-
         record.setBin(bin);
         return recordRepository.save(record);
     }
@@ -44,6 +39,11 @@ public class FillLevelRecordServiceImpl {
         if (binId == null) {
             throw new IllegalArgumentException("Bin ID cannot be null");
         }
+
+        // Validate bin existence
+        binRepository.findById(binId)
+                .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
+
         return recordRepository.findByBinId(binId);
     }
 }
