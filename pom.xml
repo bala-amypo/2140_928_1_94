@@ -10,16 +10,20 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
+    <name>demo</name>
+    <description>Minimal Maven project for TestNG + Mockito tests</description>
+
     <properties>
         <java.version>17</java.version>
         <testng.version>7.9.0</testng.version>
         <mockito.version>5.8.0</mockito.version>
         <spring.security.version>6.2.1</spring.security.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
 
-        <!-- Spring Security core (needed for Authentication, UserDetails) -->
+        <!-- Spring Security core (Authentication, UserDetails, PasswordEncoder if used) -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
@@ -34,18 +38,10 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Mockito -->
+        <!-- Mockito core (NO mockito-testng) -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>${mockito.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Mockito TestNG support (optional but useful) -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-testng</artifactId>
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
@@ -55,7 +51,7 @@
     <build>
         <plugins>
 
-            <!-- Compiler -->
+            <!-- Java compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -66,7 +62,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Surefire for TestNG -->
+            <!-- Surefire plugin for TestNG -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

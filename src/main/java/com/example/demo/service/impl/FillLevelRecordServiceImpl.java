@@ -1,82 +1,49 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.*;
-import com.example.demo.model.*;
-import com.example.demo.repository.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-public class package com.example.demo.service.impl;
-
-import com.example.demo.exception.*;
-import com.example.demo.model.*;
-import com.example.demo.repository.*;
+import com.example.demo.model.Bin;
+import com.example.demo.model.FillLevelRecord;
+import com.example.demo.repository.BinRepository;
+import com.example.demo.repository.FillLevelRecordRepository;
+import com.example.demo.exception.ResourceNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class FillLevelRecordServiceImpl {
 
-    private final FillLevelRecordRepository repo;
-    private final BinRepository binRepo;
+    private final FillLevelRecordRepository recordRepository;
+    private final BinRepository binRepository;
 
-    public FillLevelRecordServiceImpl(FillLevelRecordRepository r, BinRepository b) {
-        repo = r;
-        binRepo = b;
+    public FillLevelRecordServiceImpl(FillLevelRecordRepository recordRepository,
+                                      BinRepository binRepository) {
+        this.recordRepository = recordRepository;
+        this.binRepository = binRepository;
     }
 
-    public FillLevelRecord createRecord(FillLevelRecord r) {
-        Bin bin = binRepo.findById(r.getBin().getId())
-                .orElseThrow(() -> new BadRequestException("Bin not found"));
+    public FillLevelRecord createRecord(FillLevelRecord record) {
+        if (record == null) {
+            throw new IllegalArgumentException("Record cannot be null");
+        }
 
-        if (!bin.getActive()) throw new BadRequestException("Inactive bin");
-        if (r.getRecordedAt().isAfter(LocalDateTime.now()))
-            throw new BadRequestException("Future date");
+        if (record.getBin() == null || record.getBin().getId() == null) {
+            throw new IllegalArgumentException("Bin information is required");
+        }
 
-        return repo.save(r);
+        Bin bin = binRepository.findById(record.getBin().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
+
+        if (record.getTimestamp() == null) {
+            record.setTimestamp(LocalDateTime.now());
+        }
+
+        record.setBin(bin);
+        return recordRepository.save(record);
     }
 
-    public FillLevelRecord getRecordById(Long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Record not found"));
-    }
-
-    public List<FillLevelRecord> getRecentRecords(Long binId, int limit) {
-        Bin bin = binRepo.findById(binId).orElseThrow();
-        List<FillLevelRecord> list = repo.findByBinOrderByRecordedAtDesc(bin);
-        return list.subList(0, Math.min(limit, list.size()));
-    }
-}
- {
-
-    private final FillLevelRecordRepository repo;
-    private final BinRepository binRepo;
-
-    public FillLevelRecordServiceImpl(FillLevelRecordRepository r, BinRepository b) {
-        repo = r;
-        binRepo = b;
-    }
-
-    public FillLevelRecord createRecord(FillLevelRecord r) {
-        Bin bin = binRepo.findById(r.getBin().getId())
-                .orElseThrow(() -> new BadRequestException("Bin not found"));
-
-        if (!bin.getActive()) throw new BadRequestException("Inactive bin");
-        if (r.getRecordedAt().isAfter(LocalDateTime.now()))
-            throw new BadRequestException("Future date");
-
-        return repo.save(r);
-    }
-
-    public FillLevelRecord getRecordById(Long id) {
-        return repo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Record not found"));
-    }
-
-    public List<FillLevelRecord> getRecentRecords(Long binId, int limit) {
-        Bin bin = binRepo.findById(binId).orElseThrow();
-        List<FillLevelRecord> list = repo.findByBinOrderByRecordedAtDesc(bin);
-        return list.subList(0, Math.min(limit, list.size()));
+    public List<FillLevelRecord> getRecordsForBin(Long binId) {
+        if (binId == null) {
+            throw new IllegalArgumentException("Bin ID cannot be null");
+        }
+        return recordRepository.findByBinId(binId);
     }
 }
