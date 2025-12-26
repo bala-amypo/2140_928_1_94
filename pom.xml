@@ -36,28 +36,28 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- ✅ JPA (FIXES Entity, Table, Repository, JpaRepository) -->
+        <!-- JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- ✅ VALIDATION (FIXES jakarta.validation.*) -->
+        <!-- VALIDATION -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- DATABASE (safe even if unused by tests) -->
+        <!-- DATABASES -->
+        <!-- H2 for runtime (optional) -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
-
-        <!-- ✅ ADD MYSQL CONNECTOR -->
+        <!-- MySQL driver -->
         <dependency>
-            <groupId>com.mysql</groupId>
+            <groupId>mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <version>8.1.0</version>
         </dependency>
@@ -81,18 +81,31 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- ✅ SWAGGER / OPENAPI -->
+        <!-- SWAGGER / OPENAPI -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.3.0</version>
         </dependency>
 
-        <!-- ✅ TESTNG -->
+        <!-- TESTING -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>7.9.0</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- MOCKITO -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.5.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-testng</artifactId>
+            <version>5.5.0</version>
             <scope>test</scope>
         </dependency>
 
