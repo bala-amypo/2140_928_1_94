@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.*;
 import com.example.demo.repository.*;
 import com.example.demo.service.OverflowPredictionService;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class OverflowPredictionServiceImpl implements OverflowPredictionService {
@@ -31,13 +33,13 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
     @Override
     public OverflowPrediction generatePrediction(Long binId) {
         Bin bin = binRepository.findById(binId)
-            .orElseThrow(() -> new RuntimeException("Bin not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
         
         FillLevelRecord latestRecord = recordRepository.findTop1ByBinOrderByRecordedAtDesc(bin)
-            .orElseThrow(() -> new RuntimeException("No fill records found"));
+            .orElseThrow(() -> new ResourceNotFoundException("No fill records found"));
         
         UsagePatternModel model = modelRepository.findTop1ByBinOrderByLastUpdatedDesc(bin)
-            .orElseThrow(() -> new RuntimeException("No usage model found"));
+            .orElseThrow(() -> new ResourceNotFoundException("No usage model found"));
         
         // Simple prediction logic
         double remainingCapacity = 100 - latestRecord.getFillPercentage();
@@ -57,7 +59,7 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
     @Override
     public List<OverflowPrediction> getLatestPredictionsForZone(Long zoneId) {
         Zone zone = zoneRepository.findById(zoneId)
-            .orElseThrow(() -> new RuntimeException("Zone not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Zone not found"));
         
         return predictionRepository.findLatestPredictionsForZone(zone);
     }
