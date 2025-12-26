@@ -13,18 +13,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable()  // Disable CSRF for API testing
+            .csrf().disable()
             .authorizeRequests()
             .antMatchers(
-                "/", 
-                "/swagger-ui/**", 
-                "/v3/api-docs/**", 
-                "/api/**",
-                "/actuator/**"
-            ).permitAll()  // Allow public access to ALL API endpoints
-            .anyRequest().authenticated()  // This line won't matter since we permit all above
+                "/",
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
+                "/auth/**",
+                "/api/health",
+                "/api/test",
+                "/api/echo/**"
+            ).permitAll()
+            .antMatchers("/api/**").authenticated()
+            .anyRequest().authenticated()
             .and()
-            .httpBasic().disable();  // Disable HTTP Basic auth
+            .formLogin().disable()
+            .httpBasic().disable();
         
         return http.build();
     }
