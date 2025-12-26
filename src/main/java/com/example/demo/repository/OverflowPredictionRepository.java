@@ -16,9 +16,4 @@ public interface OverflowPredictionRepository extends JpaRepository<OverflowPred
            "WHERE p.bin.zone = :zone " +
            "ORDER BY p.generatedAt DESC")
     List<OverflowPrediction> findLatestPredictionsForZone(@Param("zone") Zone zone);
-    
-    @Query("SELECT p FROM OverflowPrediction p " +
-           "WHERE p.bin.id = :binId " +
-           "ORDER BY p.generatedAt DESC")
-    List<OverflowPrediction> findLatestByBinId(@Param("binId") Long binId);
 }

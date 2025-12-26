@@ -10,5 +10,3 @@ public interface BinService {
     void deactivateBin(Long id);
     List<Bin> getAllBins();
 }
-
-// Similar interfaces for other services

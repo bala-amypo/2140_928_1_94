@@ -5,7 +5,6 @@ public class ApiResponse {
     private String message;
     private Object data;
     
-    // Getters and setters
     public boolean isSuccess() { return success; }
     public void setSuccess(boolean success) { this.success = success; }
     public String getMessage() { return message; }

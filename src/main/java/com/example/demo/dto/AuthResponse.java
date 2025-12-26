@@ -6,7 +6,6 @@ public class AuthResponse {
     private String email;
     private String role;
     
-    // Getters and setters
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
     public Long getUserId() { return userId; }

@@ -42,7 +42,6 @@ public class FillLevelRecordServiceImpl implements FillLevelRecordService {
             throw new BadRequestException("Record date cannot be in the future");
         }
         
-        // Set recordedAt to now if not provided
         if (record.getRecordedAt() == null) {
             record.setRecordedAt(LocalDateTime.now());
         }
@@ -60,31 +59,17 @@ public class FillLevelRecordServiceImpl implements FillLevelRecordService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<FillLevelRecord> getRecentRecords(Long binId, int limit) {
+    public List<FillLevelRecord> getRecordsForBin(Long binId) {
         Bin bin = binRepository.findById(binId)
             .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id: " + binId));
         
-        List<FillLevelRecord> allRecords = recordRepository.findByBinOrderByRecordedAtDesc(bin);
+        return recordRepository.findByBinOrderByRecordedAtDesc(bin);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<FillLevelRecord> getRecentRecords(Long binId, int limit) {
+        List<FillLevelRecord> allRecords = getRecordsForBin(binId);
         return allRecords.stream().limit(limit).toList();
-    }
-    
-    // Additional method to get current fill percentage
-    @Transactional(readOnly = true)
-    public Double getCurrentFillPercentage(Long binId) {
-        Bin bin = binRepository.findById(binId)
-            .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
-        
-        return recordRepository.findTop1ByBinOrderByRecordedAtDesc(bin)
-            .map(FillLevelRecord::getFillPercentage)
-            .orElse(0.0);
-    }
-    
-    // Additional method to get records within time range
-    @Transactional(readOnly = true)
-    public List<FillLevelRecord> getRecordsByDateRange(Long binId, LocalDateTime start, LocalDateTime end) {
-        Bin bin = binRepository.findById(binId)
-            .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
-        
-        return recordRepository.findByBinAndRecordedAtBetween(bin, start, end);
     }
 }

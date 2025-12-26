@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Transactional
@@ -74,13 +75,10 @@ public class UsagePatternModelServiceImpl implements UsagePatternModelService {
         return modelRepository.findTop1ByBinOrderByLastUpdatedDesc(bin)
             .orElseThrow(() -> new ResourceNotFoundException("No model found for bin with id: " + binId));
     }
-    
-    // Additional method to check if bin has a model
+
+    @Override
     @Transactional(readOnly = true)
-    public boolean hasModelForBin(Long binId) {
-        Bin bin = binRepository.findById(binId)
-            .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
-        
-        return modelRepository.findTop1ByBinOrderByLastUpdatedDesc(bin).isPresent();
+    public List<UsagePatternModel> getAllModels() {
+        return modelRepository.findAll();
     }
 }

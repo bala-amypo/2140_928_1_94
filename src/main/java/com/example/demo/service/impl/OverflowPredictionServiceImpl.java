@@ -47,9 +47,8 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
         UsagePatternModel model = modelRepository.findTop1ByBinOrderByLastUpdatedDesc(bin)
             .orElseThrow(() -> new ResourceNotFoundException("No usage model found for bin with id: " + binId));
         
-        // Simple prediction logic
         double remainingCapacity = 100 - latestRecord.getFillPercentage();
-        double dailyIncrease = model.getAvgDailyIncreaseWeekday(); // Simplified - could use weekday/weekend logic
+        double dailyIncrease = model.getAvgDailyIncreaseWeekday();
         int daysUntilFull = dailyIncrease > 0 ? (int) Math.ceil(remainingCapacity / dailyIncrease) : Integer.MAX_VALUE;
         
         OverflowPrediction prediction = new OverflowPrediction();
@@ -64,50 +63,29 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
 
     @Override
     @Transactional(readOnly = true)
+    public OverflowPrediction getPredictionById(Long id) {
+        return predictionRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Prediction not found with id: " + id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<OverflowPrediction> getPredictionsForBin(Long binId) {
+        Bin bin = binRepository.findById(binId)
+            .orElseThrow(() -> new ResourceNotFoundException("Bin not found with id: " + binId));
+        
+        return predictionRepository.findAll().stream()
+            .filter(p -> p.getBin().getId().equals(binId))
+            .sorted((p1, p2) -> p2.getGeneratedAt().compareTo(p1.getGeneratedAt()))
+            .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<OverflowPrediction> getLatestPredictionsForZone(Long zoneId) {
         Zone zone = zoneRepository.findById(zoneId)
             .orElseThrow(() -> new ResourceNotFoundException("Zone not found with id: " + zoneId));
         
         return predictionRepository.findLatestPredictionsForZone(zone);
     }
-    
-    // Additional method to get prediction for a specific bin
-    @Transactional(readOnly = true)
-    public OverflowPrediction getLatestPredictionForBin(Long binId) {
-        Bin bin = binRepository.findById(binId)
-            .orElseThrow(() -> new ResourceNotFoundException("Bin not found"));
-        
-        List<OverflowPrediction> predictions = predictionRepository.findAll().stream()
-            .filter(p -> p.getBin().getId().equals(binId))
-            .sorted((p1, p2) -> p2.getGeneratedAt().compareTo(p1.getGeneratedAt()))
-            .toList();
-        
-        if (predictions.isEmpty()) {
-            throw new ResourceNotFoundException("No predictions found for bin");
-        }
-        
-        return predictions.get(0);
-    }
-    
-    // Additional method to generate predictions for all active bins in a zone
-    public List<OverflowPrediction> generatePredictionsForZone(Long zoneId) {
-        Zone zone = zoneRepository.findById(zoneId)
-            .orElseThrow(() -> new ResourceNotFoundException("Zone not found"));
-        
-        List<Bin> activeBins = binRepository.findByZoneAndActiveTrue(zone);
-        
-        return activeBins.stream()
-            .map(bin -> {
-                try {
-                    return generatePrediction(bin.getId());
-                } catch (Exception e) {
-                    // Log error but continue with other bins
-                    System.err.println("Failed to generate prediction for bin " + bin.getId() + ": " + e.getMessage());
-                    return null;
-                }
-            })
-            .filter(prediction -> prediction != null)
-            .toList();
-    }
 }
-
