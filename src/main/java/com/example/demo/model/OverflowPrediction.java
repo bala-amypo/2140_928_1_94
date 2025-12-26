@@ -1,26 +1,34 @@
 package com.example.demo.model;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class OverflowPrediction {
-    private Long id;
+
     private Bin bin;
-    private Integer daysUntilFull;
-    private LocalDate predictedFullDate;
-    private UsagePatternModel modelUsed;
+    private boolean willOverflow;
+    private LocalDateTime predictedAt;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Bin getBin() {
+        return bin;
+    }
 
-    public Bin getBin() { return bin; }
-    public void setBin(Bin bin) { this.bin = bin; }
+    public void setBin(Bin bin) {
+        this.bin = bin;
+    }
 
-    public Integer getDaysUntilFull() { return daysUntilFull; }
-    public void setDaysUntilFull(Integer daysUntilFull) { this.daysUntilFull = daysUntilFull; }
+    public boolean isWillOverflow() {
+        return willOverflow;
+    }
 
-    public LocalDate getPredictedFullDate() { return predictedFullDate; }
-    public void setPredictedFullDate(LocalDate predictedFullDate) { this.predictedFullDate = predictedFullDate; }
+    public void setWillOverflow(boolean willOverflow) {
+        this.willOverflow = willOverflow;
+    }
 
-    public UsagePatternModel getModelUsed() { return modelUsed; }
-    public void setModelUsed(UsagePatternModel modelUsed) { this.modelUsed = modelUsed; }
+    public LocalDateTime getPredictedAt() {
+        return predictedAt;
+    }
+
+    public void setPredictedAt(LocalDateTime predictedAt) {
+        this.predictedAt = predictedAt;
+    }
 }
