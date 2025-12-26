@@ -63,7 +63,7 @@ public class BinController {
         return ResponseEntity.ok(updatedBin);
     }
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/{id}/deactivate")
     @Operation(summary = "Deactivate bin", description = "Deactivates a bin (soft delete)")
     public ResponseEntity<Map<String, String>> deactivateBin(@PathVariable Long id) {
         binService.deactivateBin(id);
@@ -71,14 +71,5 @@ public class BinController {
         response.put("message", "Bin deactivated successfully");
         response.put("binId", id.toString());
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/active")
-    @Operation(summary = "Get active bins", description = "Returns list of all active bins")
-    public ResponseEntity<List<Bin>> getActiveBins() {
-        List<Bin> bins = binService.getAllBins().stream()
-            .filter(bin -> bin.getActive() != null && bin.getActive())
-            .toList();
-        return ResponseEntity.ok(bins);
     }
 }

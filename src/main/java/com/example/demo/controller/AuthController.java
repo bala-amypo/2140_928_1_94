@@ -30,7 +30,6 @@ public class AuthController {
             @RequestParam String password) {
         
         try {
-            // Register user using your existing service
             CustomUserDetailsService.DemoUser user = userDetailsService.registerUser(name, email, password);
             
             Map<String, Object> response = new HashMap<>();
@@ -55,17 +54,11 @@ public class AuthController {
         String password = loginRequest.get("password");
         
         try {
-            // Get user from your service
             CustomUserDetailsService.DemoUser user = userDetailsService.getByEmail(email);
             
-            // In a real app, you would verify the password here
-            // For demo, we'll trust the user exists
-            
-            // Create authentication
             UsernamePasswordAuthenticationToken auth = 
                 new UsernamePasswordAuthenticationToken(email, password);
             
-            // Generate JWT token
             String token = jwtTokenProvider.generateToken(auth, user.getId(), user.getRole(), user.getEmail());
             
             Map<String, Object> response = new HashMap<>();
@@ -85,18 +78,5 @@ public class AuthController {
         }
     }
     
-    @GetMapping("/test-token")
-    @Operation(summary = "Test token generation")
-    public Map<String, String> testToken() {
-        // For testing - generates a token with test user
-        UsernamePasswordAuthenticationToken auth = 
-            new UsernamePasswordAuthenticationToken("test@demo.com", "test123");
-        
-        String token = jwtTokenProvider.generateToken(auth, 999L, "USER", "test@demo.com");
-        
-        Map<String, String> response = new HashMap<>();
-        response.put("token", token);
-        response.put("message", "Test token generated");
-        return response;
-    }
+    // REMOVE @GetMapping("/test-token") - Not in spec
 }
