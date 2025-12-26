@@ -36,27 +36,25 @@ public class OpenApiConfig {
             .name("MIT License")
             .url("https://opensource.org/licenses/MIT");
 
+        String description = "API for managing waste bins, monitoring fill levels, and predicting overflow events.\n\n" +
+                           "## Authentication\n" +
+                           "Use `/auth/login` to get a JWT token, then include it in the Authorization header:\n" +
+                           "```\n" +
+                           "Authorization: Bearer {token}\n" +
+                           "```\n\n" +
+                           "## Endpoints\n" +
+                           "- `/api/bins` - Bin management\n" +
+                           "- `/api/fill-records` - Fill level records\n" +
+                           "- `/api/models` - Usage pattern models\n" +
+                           "- `/api/predictions` - Overflow predictions\n" +
+                           "- `/api/zones` - Zone management\n" +
+                           "- `/auth/*` - Authentication";
+
         Info info = new Info()
             .title("Bin Overflow Predictor API")
             .version("1.0")
             .contact(contact)
-            .description("""
-                API for managing waste bins, monitoring fill levels, and predicting overflow events.
-                
-                ## Authentication
-                Use `/auth/login` to get a JWT token, then include it in the Authorization header:
-                ```
-                Authorization: Bearer {token}
-                ```
-                
-                ## Endpoints
-                - `/api/bins` - Bin management
-                - `/api/fill-records` - Fill level records
-                - `/api/models` - Usage pattern models
-                - `/api/predictions` - Overflow predictions
-                - `/api/zones` - Zone management
-                - `/auth/*` - Authentication
-                """)
+            .description(description)
             .license(mitLicense);
 
         // JWT Security Scheme
