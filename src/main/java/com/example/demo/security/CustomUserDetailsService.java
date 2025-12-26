@@ -16,12 +16,22 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    // Production constructor (used by Spring)
     public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    // Test-friendly constructor (optional, avoid in prod)
+    public CustomUserDetailsService() {
+        this.userRepository = null;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        if (userRepository == null) {
+            throw new IllegalStateException("UserRepository is not initialized");
+        }
+
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
