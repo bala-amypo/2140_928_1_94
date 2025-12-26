@@ -21,6 +21,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 public class BinOverflowPredictorTestNGTests {
+    @Listeners(TestResultListener.class)
 
     private BinRepository binRepository;
     private FillLevelRecordRepository recordRepository;

@@ -25,6 +25,7 @@
         <mysql.version>8.0.33</mysql.version>
         <springdoc.version>1.7.0</springdoc.version>
         <h2.version>2.1.214</h2.version>
+        <surefire.version>2.22.2</surefire.version>
     </properties>
     
     <dependencies>
@@ -42,7 +43,7 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         
-        <!-- Database - H2 (for in-memory testing) -->
+        <!-- Database - H2 (in-memory) -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -50,7 +51,7 @@
             <scope>runtime</scope>
         </dependency>
         
-        <!-- Optional: MySQL if you want to switch later -->
+        <!-- Optional: MySQL -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -99,6 +100,11 @@
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     
     <build>
@@ -113,18 +119,30 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
+                <version>${surefire.version}</version>
                 <configuration>
                     <testFailureIgnore>false</testFailureIgnore>
+                    <parallel>methods</parallel>
+                    <threadCount>10</threadCount>
                     <includes>
                         <include>**/*TestNGTests.java</include>
                         <include>**/*Test.java</include>
                     </includes>
+                    <excludes>
+                        <exclude>**/Abstract*.java</exclude>
+                    </excludes>
+                    <properties>
+                        <property>
+                            <name>listener</name>
+                            <value>com.example.demo.TestResultListener</value>
+                        </property>
+                    </properties>
                 </configuration>
             </plugin>
         </plugins>
