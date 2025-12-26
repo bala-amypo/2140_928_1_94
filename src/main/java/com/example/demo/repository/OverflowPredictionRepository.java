@@ -11,7 +11,12 @@ import java.util.Optional;
 @Repository
 public interface OverflowPredictionRepository extends JpaRepository<OverflowPrediction, Long> {
 
+    // All predictions for a given bin
     List<OverflowPrediction> findByBin(Bin bin);
 
+    // All predictions for a zone
+    List<OverflowPrediction> findByBin_Zone_Id(Long zoneId);
+
+    // Latest prediction for a zone
     Optional<OverflowPrediction> findTopByBin_Zone_IdOrderByPredictedAtDesc(Long zoneId);
 }
