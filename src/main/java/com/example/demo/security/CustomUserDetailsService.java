@@ -1,45 +1,72 @@
 package com.example.demo.security;
 
-import java.util.*;
-import org.springframework.security.core.userdetails.*;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
-public class CustomUserDetailsService {
+import java.util.HashMap;
+import java.util.Map;
 
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+    
     private final Map<String, DemoUser> users = new HashMap<>();
-
+    
     public CustomUserDetailsService() {
-        users.put("admin@city.com", new DemoUser("Admin", "admin@city.com", "ADMIN"));
+        // Default admin user
+        users.put("admin@city.com", 
+            new DemoUser(1L, "Admin User", "admin@city.com", "admin123", "ADMIN"));
     }
-
+    
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        DemoUser demoUser = users.get(email);
+        if (demoUser == null) {
+            throw new UsernameNotFoundException("User not found with email: " + email);
+        }
+        
+        return User.withUsername(demoUser.getEmail())
+            .password(demoUser.getPassword())
+            .roles(demoUser.getRole())
+            .build();
+    }
+    
     public DemoUser getByEmail(String email) {
         return users.get(email);
     }
-
-    public DemoUser registerUser(String name, String email, String pwd) {
+    
+    public DemoUser registerUser(String name, String email, String password) {
         if (users.containsKey(email)) {
-            throw new RuntimeException("User already exists");
+            throw new RuntimeException("User with email " + email + " already exists");
         }
-        DemoUser u = new DemoUser(name, email, "USER");
-        users.put(email, u);
-        return u;
+        
+        DemoUser user = new DemoUser((long) (users.size() + 1), name, email, password, "USER");
+        users.put(email, user);
+        return user;
     }
-
-    public UserDetails loadUserByUsername(String username) {
-        DemoUser u = users.get(username);
-        if (u == null) throw new UsernameNotFoundException("User not found");
-        return User.withUsername(u.email).password("pwd").roles(u.role).build();
-    }
-
+    
     public static class DemoUser {
-        private final String name;
-        private final String email;
-        private final String role;
-
-        public DemoUser(String n, String e, String r) {
-            name = n; email = e; role = r;
+        private Long id;
+        private String name;
+        private String email;
+        private String password;
+        private String role;
+        
+        // Constructor, getters, and setters
+        public DemoUser(Long id, String name, String email, String password, String role) {
+            this.id = id;
+            this.name = name;
+            this.email = email;
+            this.password = password;
+            this.role = role;
         }
-
+        
+        // Getters and setters
         public String getEmail() { return email; }
+        public String getPassword() { return password; }
         public String getRole() { return role; }
+        public void setRole(String role) { this.role = role; }
     }
 }
