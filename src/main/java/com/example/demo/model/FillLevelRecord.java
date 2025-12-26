@@ -1,32 +1,21 @@
 package com.example.demo.model;
 
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "fill_level_records")
 public class FillLevelRecord {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    private Double fillPercentage;
+    private LocalDateTime recordedAt;
+    
+    @ManyToOne
+    @JoinColumn(name = "bin_id")
     private Bin bin;
-    private int fillLevel; // make sure this exists
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Bin getBin() {
-        return bin;
-    }
-
-    public void setBin(Bin bin) {
-        this.bin = bin;
-    }
-
-    public int getFillLevel() {
-        return fillLevel;
-    }
-
-    public void setFillLevel(int fillLevel) {
-        this.fillLevel = fillLevel;
-    }
+    
+    // Getters and setters
 }

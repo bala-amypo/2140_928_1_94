@@ -1,34 +1,27 @@
 package com.example.demo.model;
 
+import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "overflow_predictions")
 public class OverflowPrediction {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    private Integer daysUntilFull;
+    private LocalDate predictedFullDate;
+    private LocalDateTime generatedAt;
+    
+    @ManyToOne
+    @JoinColumn(name = "bin_id")
     private Bin bin;
-    private boolean willOverflow;
-    private LocalDateTime predictedAt;
-
-    public Bin getBin() {
-        return bin;
-    }
-
-    public void setBin(Bin bin) {
-        this.bin = bin;
-    }
-
-    public boolean isWillOverflow() {
-        return willOverflow;
-    }
-
-    public void setWillOverflow(boolean willOverflow) {
-        this.willOverflow = willOverflow;
-    }
-
-    public LocalDateTime getPredictedAt() {
-        return predictedAt;
-    }
-
-    public void setPredictedAt(LocalDateTime predictedAt) {
-        this.predictedAt = predictedAt;
-    }
+    
+    @ManyToOne
+    @JoinColumn(name = "model_id")
+    private UsagePatternModel modelUsed;
+    
+    // Getters and setters
 }
