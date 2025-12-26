@@ -45,7 +45,7 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
 
         OverflowPrediction prediction = new OverflowPrediction();
         prediction.setBin(bin);
-        prediction.setPredictedLevel(0.0);
+        prediction.setPredictedLevel(0.0); // default value
         return predictionRepository.save(prediction);
     }
 
@@ -62,4 +62,3 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
                 .orElseThrow(() -> new ResourceNotFoundException("No predictions found for zone id: " + zoneId));
     }
 }
-
