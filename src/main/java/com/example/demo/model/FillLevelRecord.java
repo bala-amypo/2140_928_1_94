@@ -1,22 +1,32 @@
 package com.example.demo.model;
 
-import java.time.LocalDateTime;
-
 public class FillLevelRecord {
+
     private Long id;
     private Bin bin;
-    private Double fillPercentage;
-    private LocalDateTime recordedAt;
+    private int fillLevel; // make sure this exists
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public Bin getBin() { return bin; }
-    public void setBin(Bin bin) { this.bin = bin; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public Double getFillPercentage() { return fillPercentage; }
-    public void setFillPercentage(Double fillPercentage) { this.fillPercentage = fillPercentage; }
+    public Bin getBin() {
+        return bin;
+    }
 
-    public LocalDateTime getRecordedAt() { return recordedAt; }
-    public void setRecordedAt(LocalDateTime recordedAt) { this.recordedAt = recordedAt; }
+    public void setBin(Bin bin) {
+        this.bin = bin;
+    }
+
+    public int getFillLevel() {
+        return fillLevel;
+    }
+
+    public void setFillLevel(int fillLevel) {
+        this.fillLevel = fillLevel;
+    }
 }
