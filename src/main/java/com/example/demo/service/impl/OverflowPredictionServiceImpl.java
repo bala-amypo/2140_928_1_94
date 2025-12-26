@@ -7,17 +7,17 @@ import com.example.demo.repository.FillLevelRecordRepository;
 import com.example.demo.repository.OverflowPredictionRepository;
 import com.example.demo.service.OverflowPredictionService;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class OverflowPredictionServiceImpl implements OverflowPredictionService {
 
-    private final FillLevelRecordRepository recordRepo;
     private final OverflowPredictionRepository predictionRepo;
+    private final FillLevelRecordRepository recordRepo;
 
-    public OverflowPredictionServiceImpl(FillLevelRecordRepository recordRepo, OverflowPredictionRepository predictionRepo) {
-        this.recordRepo = recordRepo;
+    public OverflowPredictionServiceImpl(OverflowPredictionRepository predictionRepo,
+                                         FillLevelRecordRepository recordRepo) {
         this.predictionRepo = predictionRepo;
+        this.recordRepo = recordRepo;
     }
 
     @Override
@@ -26,15 +26,12 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
         if (latestRecordOpt.isEmpty()) return null;
 
         FillLevelRecord latestRecord = latestRecordOpt.get();
+
         OverflowPrediction prediction = new OverflowPrediction();
-
-        prediction.setPredictedAt(LocalDateTime.now());
         prediction.setBin(bin);
-
-        if (latestRecord.getFillLevel() != null && bin.getCapacityLiters() != null) {
-            double fillPercentage = (double) latestRecord.getFillLevel() / bin.getCapacityLiters() * 100;
-            prediction.setFillPercentage(fillPercentage);
-        }
+        // If your model has a predictedAt field, use:
+        // prediction.setPredictedAt(LocalDateTime.now());
+        prediction.setPredictedLevel(latestRecord.getFillLevel()); // example logic
 
         return predictionRepo.save(prediction);
     }
