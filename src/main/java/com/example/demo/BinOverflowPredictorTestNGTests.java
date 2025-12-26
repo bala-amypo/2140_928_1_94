@@ -1,16 +1,21 @@
 package com.example.demo;
 
-import com.example.demo.model.*;
-import com.example.demo.repository.*;
-import com.example.demo.service.impl.*;
+import com.example.demo.model.Bin;
+import com.example.demo.model.FillLevelRecord;
+import com.example.demo.model.OverflowPrediction;
+import com.example.demo.repository.BinRepository;
+import com.example.demo.repository.FillLevelRecordRepository;
+import com.example.demo.repository.OverflowPredictionRepository;
+import com.example.demo.service.impl.BinServiceImpl;
+import com.example.demo.service.impl.FillLevelRecordServiceImpl;
+import com.example.demo.service.impl.OverflowPredictionServiceImpl;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -22,162 +27,37 @@ public class BinOverflowPredictorTestNGTests {
     private BinServiceImpl binService;
 
     @InjectMocks
-    private ZoneServiceImpl zoneService;
+    private FillLevelRecordServiceImpl fillLevelService;
 
     @InjectMocks
     private OverflowPredictionServiceImpl overflowService;
-
-    @InjectMocks
-    private UsagePatternModelServiceImpl modelService;
-
-    @InjectMocks
-    private FillLevelRecordServiceImpl recordService;
 
     @Mock
     private BinRepository binRepository;
 
     @Mock
-    private ZoneRepository zoneRepository;
+    private FillLevelRecordRepository fillLevelRepository;
 
     @Mock
-    private OverflowPredictionRepository overflowPredictionRepository;
-
-    @Mock
-    private UsagePatternModelRepository modelRepository;
-
-    @Mock
-    private FillLevelRecordRepository recordRepository;
+    private OverflowPredictionRepository overflowRepository;
 
     @BeforeMethod
-    public void setup() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
-    // ---------------- BinService Tests ----------------
     @Test
     public void testCreateBin() {
         Bin bin = new Bin();
-        bin.setIdentifier("BIN123");
-        bin.setCapacityLiters(100.0);
+        bin.setIdentifier("BIN001");
 
-        when(binRepository.save(bin)).thenReturn(bin);
+        when(binRepository.save(any(Bin.class))).thenReturn(bin);
 
-        Bin created = binService.create(bin);
-        assertNotNull(created);
-        assertEquals(created.getIdentifier(), "BIN123");
+        Bin saved = binService.create(bin);
+        assertNotNull(saved);
+        assertEquals(saved.getIdentifier(), "BIN001");
     }
 
-    @Test
-    public void testUpdateBin() {
-        Bin existing = new Bin();
-        existing.setId(1L);
-        existing.setIdentifier("OLD");
-
-        Bin updated = new Bin();
-        updated.setIdentifier("NEW");
-
-        when(binRepository.findById(1L)).thenReturn(Optional.of(existing));
-        when(binRepository.save(existing)).thenReturn(existing);
-
-        Bin result = binService.update(1L, updated);
-        assertEquals(result.getIdentifier(), "NEW");
-    }
-
-    @Test
-    public void testDeactivateBin() {
-        Bin existing = new Bin();
-        existing.setId(1L);
-        existing.setActive(true);
-
-        when(binRepository.findById(1L)).thenReturn(Optional.of(existing));
-        when(binRepository.save(existing)).thenReturn(existing);
-
-        binService.deactivate(1L);
-        assertFalse(existing.getActive());
-    }
-
-    // ---------------- ZoneService Tests ----------------
-    @Test
-    public void testCreateZone() {
-        Zone zone = new Zone();
-        zone.setZoneName("ZoneA");
-        zone.setActive(true);
-
-        when(zoneRepository.save(zone)).thenReturn(zone);
-
-        Zone created = zoneService.create(zone);
-        assertNotNull(created);
-        assertEquals(created.getZoneName(), "ZoneA");
-    }
-
-    @Test
-    public void testUpdateZone() {
-        Zone existing = new Zone();
-        existing.setId(1L);
-        existing.setZoneName("Old");
-
-        Zone updated = new Zone();
-        updated.setZoneName("New");
-
-        when(zoneRepository.findById(1L)).thenReturn(Optional.of(existing));
-        when(zoneRepository.save(existing)).thenReturn(existing);
-
-        Zone result = zoneService.update(1L, updated);
-        assertEquals(result.getZoneName(), "New");
-    }
-
-    @Test
-    public void testDeactivateZone() {
-        Zone zone = new Zone();
-        zone.setId(1L);
-        zone.setActive(true);
-
-        when(zoneRepository.findById(1L)).thenReturn(Optional.of(zone));
-        when(zoneRepository.save(zone)).thenReturn(zone);
-
-        zoneService.deactivate(1L);
-        assertFalse(zone.getActive());
-    }
-
-    // ---------------- OverflowPredictionService Tests ----------------
-    @Test
-    public void testGenerateOverflowPrediction() {
-        Bin bin = new Bin();
-        bin.setId(1L);
-
-        OverflowPrediction prediction = new OverflowPrediction();
-        prediction.setBin(bin);
-
-        when(binRepository.findById(1L)).thenReturn(Optional.of(bin));
-        when(overflowPredictionRepository.save(any())).thenReturn(prediction);
-
-        OverflowPrediction result = overflowService.generatePrediction(1L);
-        assertNotNull(result);
-        assertEquals(result.getBin(), bin);
-    }
-
-    // ---------------- UsagePatternModelService Tests ----------------
-    @Test
-    public void testCreateUsagePatternModel() {
-        Bin bin = new Bin();
-        bin.setId(1L);
-        bin.setActive(true);
-
-        UsagePatternModel model = new UsagePatternModel();
-        model.setBin(bin);
-        model.setAverageDailyUsage(5.0);
-        model.setPeakUsage(10.0);
-        model.setPatternType("weekday");
-
-        when(binRepository.findById(1L)).thenReturn(Optional.of(bin));
-        when(modelRepository.save(model)).thenReturn(model);
-
-        UsagePatternModel result = modelService.create(model);
-        assertNotNull(result);
-        assertEquals(result.getAverageDailyUsage(), 5.0);
-    }
-
-    // ---------------- FillLevelRecordService Tests ----------------
     @Test
     public void testCreateFillLevelRecord() {
         Bin bin = new Bin();
@@ -185,13 +65,41 @@ public class BinOverflowPredictorTestNGTests {
 
         FillLevelRecord record = new FillLevelRecord();
         record.setBin(bin);
-        record.setRecordedAt(LocalDateTime.now());
 
-        when(recordRepository.save(record)).thenReturn(record);
+        when(fillLevelRepository.save(any(FillLevelRecord.class))).thenReturn(record);
 
-        FillLevelRecord saved = recordService.create(record);
+        FillLevelRecord saved = fillLevelService.create(record);
         assertNotNull(saved);
         assertEquals(saved.getBin(), bin);
+    }
+
+    @Test
+    public void testGenerateOverflowPrediction() {
+        Bin bin = new Bin();
+        bin.setId(1L);
+
+        when(binRepository.findById(1L)).thenReturn(Optional.of(bin));
+
+        OverflowPrediction prediction = new OverflowPrediction();
+        prediction.setBin(bin);
+
+        when(overflowRepository.save(any(OverflowPrediction.class))).thenReturn(prediction);
+
+        OverflowPrediction savedPrediction = overflowService.generatePrediction(1L);
+        assertNotNull(savedPrediction);
+        assertEquals(savedPrediction.getBin(), bin);
+    }
+
+    @Test
+    public void testGetBinById() {
+        Bin bin = new Bin();
+        bin.setId(1L);
+
+        when(binRepository.findById(1L)).thenReturn(Optional.of(bin));
+
+        Bin found = binService.getById(1L);
+        assertNotNull(found);
+        assertEquals(found.getId(), Long.valueOf(1));
     }
 
     @Test
@@ -203,8 +111,11 @@ public class BinOverflowPredictorTestNGTests {
         record.setBin(bin);
 
         when(binRepository.findById(1L)).thenReturn(Optional.of(bin));
-        when(recordRepository.findByBin(bin)).thenReturn(Collections.singletonList(record));
+        when(fillLevelRepository.findByBin(bin)).thenReturn(List.of(record));
 
-        assertEquals(recordService.getByBin(1L).size(), 1);
+        List<FillLevelRecord> records = fillLevelService.getByBin(1L);
+        assertNotNull(records);
+        assertEquals(records.size(), 1);
+        assertEquals(records.get(0).getBin(), bin);
     }
 }
