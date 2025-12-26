@@ -110,3 +110,8 @@ public class OverflowPredictionServiceImpl implements OverflowPredictionService 
             .toList();
     }
 }
+
+
+cd /home/coder/Workspace/demo
+mkdir -p src/test/java/com/example/demo
+mkdir -p src/test/resources
