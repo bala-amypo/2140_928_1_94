@@ -21,7 +21,7 @@
     <properties>
         <java.version>11</java.version>
         <jjwt.version>0.9.1</jjwt.version>
-        <testng.version>7.8.0</testng.version> <!-- CHANGED TO 7.8.0 -->
+        <testng.version>7.8.0</testng.version>
         <mysql.version>8.0.33</mysql.version>
         <springdoc.version>1.7.0</springdoc.version>
         <h2.version>2.1.214</h2.version>
@@ -91,7 +91,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>${testng.version}</version> <!-- UPDATED -->
+            <version>${testng.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -120,9 +120,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.22.2</version>
                 <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
-                    </suiteXmlFiles>
+                    <!-- REMOVED: suiteXmlFiles section that was causing the issue -->
                     <testFailureIgnore>false</testFailureIgnore>
                     <includes>
                         <include>**/*TestNGTests.java</include>
